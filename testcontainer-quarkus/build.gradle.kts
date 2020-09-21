@@ -21,3 +21,13 @@ dependencies {
     api(project(":testcontainer"))
 
 }
+
+ext {
+    set("PUBLISH_GROUP_ID", "main")
+    set("PUBLISH_ARTIFACT_ID", "testcontainer-quarkus")
+    set("PUBLISH_VERSION", "1.0.0")
+}
+
+apply {
+    from("../release-jar.gradle")
+}

@@ -21,3 +21,13 @@ dependencies {
     implementation("org.slf4j:slf4j-simple:1.7.30")
 
 }
+
+ext {
+    set("PUBLISH_GROUP_ID", "main")
+    set("PUBLISH_ARTIFACT_ID", "testcontainer")
+    set("PUBLISH_VERSION", "1.0.0")
+}
+
+apply {
+    from("../release-jar.gradle")
+}
