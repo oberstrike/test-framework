@@ -6,7 +6,7 @@ plugins {
 
 
 allprojects {
-    group = "org.gradle.kotlin.dsl.samples.multiproject"
+    group = "main"
     version = "1.0"
 
     repositories {
