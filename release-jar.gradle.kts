@@ -8,7 +8,7 @@ val localReleaseDest = "${buildDir}/release/${myVersion}"
 
 val bitBucketUrl = "git:releases://git@bitbucket.org/oberstrike/test-framework.git"
 val bitBucketUser = "oberstrike"
-val bitbucketPassword = "Pianohits2."
+val bitbucketPassword = "test"
 
 tasks.register("uploadArchives", Upload::class) {
 
