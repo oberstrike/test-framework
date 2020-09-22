@@ -1,8 +1,8 @@
-package main
+package com.maju.logging
 
 
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager
-import main.container.IContainerCreator
+import com.maju.container.IContainerCreator
 import org.testcontainers.containers.GenericContainer
 
 //class KGenericContainer: GenericContainer<KGenericContainer>()

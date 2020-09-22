@@ -1,7 +1,7 @@
-package keycloak
+package com.maju.keycloak
 
 import dasniko.testcontainers.keycloak.KeycloakContainer
-import main.container.keycloak.KeycloakDefaultContainerCreatorImpl
+import com.maju.container.keycloak.KeycloakDefaultContainerCreatorImpl
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

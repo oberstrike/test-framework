@@ -29,5 +29,5 @@ ext {
 }
 
 apply {
-    from("../release-jar.gradle")
+    from("../release-jar.gradle.kts")
 }

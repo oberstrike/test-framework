@@ -1,8 +1,11 @@
-package main
+package com.maju
 
-import main.logging.DockerTestResourceLoggingHandler
-import main.container.postgres.PostgresContainerCreatorImpl
-import main.container.postgres.PostgresOnContainerCreateHandler
+import com.maju.logging.DockerTestResourceLoggingHandler
+import com.maju.container.postgres.PostgresContainerCreatorImpl
+import com.maju.container.postgres.PostgresOnContainerCreateHandler
+import com.maju.logging.AbstractDockerTestResource
+import com.maju.logging.IOnStartHandler
+import com.maju.logging.IOnStopHandler
 
 
 class DockerTestResource : AbstractDockerTestResource() {

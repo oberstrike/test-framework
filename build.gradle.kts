@@ -6,7 +6,7 @@ plugins {
 
 
 allprojects {
-    group = "main"
+    group = "com.maju"
     version = "1.0"
 
     repositories {

@@ -1,7 +1,7 @@
-package main.container.keycloak
+package com.maju.container.keycloak
 
 import dasniko.testcontainers.keycloak.KeycloakContainer
-import main.container.AbstractContainerCreator
+import com.maju.container.AbstractContainerCreator
 
 
 private val defaultKeycloakHandler = KeycloakContainerCreateHandler(
@@ -11,7 +11,7 @@ private val defaultKeycloakHandler = KeycloakContainerCreateHandler(
 class KeycloakDefaultContainerCreatorImpl :
     AbstractContainerCreator<KeycloakContainer>() {
 
-    override val container: KeycloakContainer = KeycloakContainer("quay.io/keycloak/keycloak:latest")
+    override val container: KeycloakContainer = KeycloakContainer("quay.io/com.maju.keycloak/com.maju.keycloak:latest")
 
     override val onContainersCreateHandlers: List<IOnContainerCreateHandler<KeycloakContainer>> = listOf(
         defaultKeycloakHandler

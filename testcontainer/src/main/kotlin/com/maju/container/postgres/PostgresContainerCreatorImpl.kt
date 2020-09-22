@@ -1,6 +1,6 @@
-package main.container.postgres
+package com.maju.container.postgres
 
-import main.container.AbstractContainerCreator
+import com.maju.container.AbstractContainerCreator
 import org.testcontainers.containers.PostgreSQLContainer
 
 const val postgresContainerName = "postgres"

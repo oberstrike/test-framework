@@ -1,10 +1,10 @@
-package main.container.keycloak
+package com.maju.container.keycloak
 
 import com.github.dockerjava.api.model.HostConfig
 import com.github.dockerjava.api.model.PortBinding
 import dasniko.testcontainers.keycloak.KeycloakContainer
-import main.container.AbstractContainerCreator
-import main.util.put
+import com.maju.container.AbstractContainerCreator
+import com.maju.container.util.put
 
 
 class KeycloakContainerCreateHandler(

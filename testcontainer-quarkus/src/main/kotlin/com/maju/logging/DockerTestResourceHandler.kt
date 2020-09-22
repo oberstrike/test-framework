@@ -1,4 +1,4 @@
-package main
+package com.maju.logging
 
 import org.testcontainers.containers.GenericContainer
 

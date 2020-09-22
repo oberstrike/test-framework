@@ -1,8 +1,6 @@
-package main.logging
+package com.maju.logging
 
 
-import main.IOnStartHandler
-import main.IOnStopHandler
 import mu.KotlinLogging
 import org.testcontainers.containers.GenericContainer
 

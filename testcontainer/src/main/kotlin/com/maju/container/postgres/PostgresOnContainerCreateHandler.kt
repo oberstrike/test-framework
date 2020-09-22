@@ -1,8 +1,8 @@
-package main.container.postgres
+package com.maju.container.postgres
 
 import com.github.dockerjava.api.model.HostConfig
 import com.github.dockerjava.api.model.PortBinding
-import main.container.AbstractContainerCreator
+import com.maju.container.AbstractContainerCreator
 
 
 class PostgresOnContainerCreateHandler(
