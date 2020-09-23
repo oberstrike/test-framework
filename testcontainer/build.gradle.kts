@@ -1,5 +1,10 @@
+import java.util.*
+
 plugins {
     kotlin("jvm")
+    `maven-publish`
+    id("com.jfrog.bintray") version "1.8.5"
+    id("org.jetbrains.dokka") version "1.4.0"
 }
 
 dependencies {
@@ -23,11 +28,33 @@ dependencies {
 }
 
 ext {
-    set("PUBLISH_GROUP_ID", "main")
+    set("PUBLISH_GROUP_ID", "com.maju.container")
     set("PUBLISH_ARTIFACT_ID", "testcontainer")
     set("PUBLISH_VERSION", "1.0.0")
 }
 
-apply {
-    from("../release-jar.gradle.kts")
+val dokkaJavadocJar by tasks.creating(Jar::class) {
+    dependsOn(tasks.dokkaJavadoc)
+    from(tasks.dokkaJavadoc.get().outputDirectory.get())
+    archiveClassifier.set("javadoc")
+}
+
+val sourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(sourceSets.main.get().allSource)
+}
+
+publishing {
+    repositories {
+        maven {
+            // change to point to your repo, e.g. http://my.org/repo
+            url = uri("$buildDir/repo")
+        }
+    }
+    publications {
+        register("mavenJava", MavenPublication::class) {
+            from(components["java"])
+            artifact(sourcesJar.get())
+        }
+    }
 }

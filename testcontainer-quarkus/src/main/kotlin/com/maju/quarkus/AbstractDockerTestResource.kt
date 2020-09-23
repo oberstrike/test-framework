@@ -1,4 +1,4 @@
-package com.maju.logging
+package com.maju.quarkus
 
 
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager

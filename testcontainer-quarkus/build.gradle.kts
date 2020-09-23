@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    `maven-publish`
 }
 
 dependencies {
@@ -23,11 +24,27 @@ dependencies {
 }
 
 ext {
-    set("PUBLISH_GROUP_ID", "main")
+    set("PUBLISH_GROUP_ID", "com.maju.quarkus")
     set("PUBLISH_ARTIFACT_ID", "testcontainer-quarkus")
     set("PUBLISH_VERSION", "1.0.0")
 }
 
-apply {
-    from("../release-jar.gradle.kts")
+val sourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(sourceSets.main.get().allSource)
+}
+
+publishing {
+    repositories {
+        maven {
+            // change to point to your repo, e.g. http://my.org/repo
+            url = uri("$buildDir/repo")
+        }
+    }
+    publications {
+        register("mavenJava", MavenPublication::class) {
+            from(components["java"])
+            artifact(sourcesJar.get())
+        }
+    }
 }

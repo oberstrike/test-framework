@@ -1,11 +1,11 @@
 package com.maju
 
-import com.maju.logging.DockerTestResourceLoggingHandler
+import com.maju.quarkus.DockerTestResourceLoggingHandler
 import com.maju.container.postgres.PostgresContainerCreatorImpl
 import com.maju.container.postgres.PostgresOnContainerCreateHandler
-import com.maju.logging.AbstractDockerTestResource
-import com.maju.logging.IOnStartHandler
-import com.maju.logging.IOnStopHandler
+import com.maju.quarkus.AbstractDockerTestResource
+import com.maju.quarkus.IOnStartHandler
+import com.maju.quarkus.IOnStopHandler
 
 
 class DockerTestResource : AbstractDockerTestResource() {
