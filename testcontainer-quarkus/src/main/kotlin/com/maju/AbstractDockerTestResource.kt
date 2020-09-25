@@ -1,11 +1,8 @@
-package com.maju.quarkus
+package com.maju
 
 
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager
-import com.maju.container.IContainerCreator
 import org.testcontainers.containers.GenericContainer
-
-//class KGenericContainer: GenericContainer<KGenericContainer>()
 
 
 abstract class AbstractDockerTestResource : QuarkusTestResourceLifecycleManager {
@@ -14,6 +11,8 @@ abstract class AbstractDockerTestResource : QuarkusTestResourceLifecycleManager 
     open val containerCreators = emptyList<IContainerCreator<*>>()
 
     open val onStartHandlers = emptyList<IOnStartHandler>()
+
+    open val onConfigCreatedHandler = emptyList<IOnConfigCreatedHandler>()
 
     open val onStopHandlers = emptyList<IOnStopHandler>()
 
@@ -31,6 +30,10 @@ abstract class AbstractDockerTestResource : QuarkusTestResourceLifecycleManager 
             .reduce { acc, mutableMap ->
                 acc.apply {
                     putAll(mutableMap)
+                }
+            }.apply {
+                onConfigCreatedHandler.forEach { handler ->
+                    handler.onConfigCreated(this)
                 }
             }
     }
@@ -53,5 +56,16 @@ abstract class AbstractDockerTestResource : QuarkusTestResourceLifecycleManager 
         }
     }
 
+    interface IOnStartHandler {
+        fun onStart(container: GenericContainer<*>)
+    }
+
+    interface IOnStopHandler {
+        fun onStop(container: GenericContainer<*>)
+    }
+
+    interface IOnConfigCreatedHandler {
+        fun onConfigCreated(config: Map<String, String>)
+    }
 
 }

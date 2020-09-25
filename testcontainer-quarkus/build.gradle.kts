@@ -1,6 +1,10 @@
+import java.util.*
+
 plugins {
     kotlin("jvm")
     `maven-publish`
+    id("com.jfrog.bintray") version "1.8.5"
+    id("org.jetbrains.dokka") version "1.4.0"
 }
 
 dependencies {
@@ -23,28 +27,103 @@ dependencies {
 
 }
 
-ext {
-    set("PUBLISH_GROUP_ID", "com.maju.quarkus")
-    set("PUBLISH_ARTIFACT_ID", "testcontainer-quarkus")
-    set("PUBLISH_VERSION", "1.0.0")
+val myGroupId = "com.maju.quarkus"
+val myArtifactId = "testcontainer-quarkus"
+val myVersion = "1.0.0"
+
+val dokkaJavadocJar by tasks.creating(Jar::class) {
+    dependsOn(tasks.dokkaJavadoc)
+    from(tasks.dokkaJavadoc.get().outputDirectory.get())
+    archiveClassifier.set("javadoc")
 }
 
-val sourcesJar by tasks.registering(Jar::class) {
+val sourcesJar by tasks.creating(Jar::class) {
     archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
+    from(sourceSets.getByName("main").allSource)
+    from("LICENCE.md") {
+        into("META-INF")
+    }
 }
+
+
+val pomUrl = "https://github.com/oberstrike/test-framework"
+val pomScmUrl = "https://github.com/oberstrike/test-framework"
+val pomIssueUrl = "https://github.com/oberstrike/test-framework/issues"
+val pomDesc = "https://github.com/oberstrike/test-framework"
+
+val pomLicenseName = "MIT"
+val pomLicenseUrl = "https://opensource.org/licenses/mit-license.php"
+
+val pomDeveloperId = "oberstrike"
+val pomDeveloperName = "Markus Jürgens"
+
 
 publishing {
-    repositories {
-        maven {
-            // change to point to your repo, e.g. http://my.org/repo
-            url = uri("$buildDir/repo")
-        }
-    }
     publications {
-        register("mavenJava", MavenPublication::class) {
+        create<MavenPublication>("testcontainer") {
+            groupId = myGroupId
+            artifactId = myArtifactId
+            version = myVersion
             from(components["java"])
-            artifact(sourcesJar.get())
+            artifact(sourcesJar)
+            artifact(dokkaJavadocJar)
+
+            pom {
+                packaging = "jar"
+                name.set(project.name)
+                description.set("A test library")
+                url.set(pomUrl)
+                scm {
+                    url.set(pomScmUrl)
+                }
+                issueManagement {
+                    url.set(pomIssueUrl)
+                }
+                licenses {
+                    license {
+                        name.set(pomLicenseName)
+                        url.set(pomLicenseUrl)
+                    }
+                }
+                developers {
+                    developer {
+                        id.set(pomDeveloperId)
+                        name.set(pomDeveloperName)
+                    }
+                }
+            }
         }
     }
+}
+
+bintray {
+    user = project.findProperty("bintrayUser").toString()
+    key = project.findProperty("bintrayKey").toString()
+    publish = !project.version.toString().endsWith("SNAPSHOT")
+
+    setPublications("testcontainer")
+
+    pkg.apply {
+        repo = "maven"
+        name = myArtifactId
+        userOrg = "oberstrike"
+        githubRepo = githubRepo
+        vcsUrl = pomScmUrl
+        description = "A testframework for testcontainer"
+        setLabels("kotlin", "faker", "testing")
+        setLicenses("MIT")
+        desc = description
+        websiteUrl = pomUrl
+        issueTrackerUrl = pomIssueUrl
+        githubReleaseNotesFile = "README.md"
+
+        version.apply {
+            //      name = myArtifactId
+            desc = pomDesc
+            released = Date().toString()
+            vcsTag = "v$myVersion"
+        }
+    }
+
+
 }

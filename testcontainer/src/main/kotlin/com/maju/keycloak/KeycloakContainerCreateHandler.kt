@@ -1,14 +1,14 @@
-package com.maju.container.keycloak
+package com.maju.keycloak
 
 import com.github.dockerjava.api.model.HostConfig
 import com.github.dockerjava.api.model.PortBinding
+import com.maju.AbstractContainerCreator
+import com.maju.util.put
 import dasniko.testcontainers.keycloak.KeycloakContainer
-import com.maju.container.AbstractContainerCreator
-import com.maju.container.util.put
 
 
 class KeycloakContainerCreateHandler(
-    keycloakContainerConfig: IKeycloakContainerConfig
+    private val keycloakContainerConfig: IKeycloakContainerConfig
 ) : AbstractContainerCreator.IContainerCreateHandler<KeycloakContainer> {
 
     private var realmName = keycloakContainerConfig.realmName
@@ -28,30 +28,32 @@ class KeycloakContainerCreateHandler(
         //   "/imports/realm-export.json"
         private const val KEYCLOAK_PORT = 8181
 
-        fun defaultConfig(
-            realmName: String = REALM_NAME,
-            adminUsername: String = ADMIN_USERNAME,
-            adminPassword: String = ADMIN_PASSWORD,
-            realmImportFile: String? = null,
-            port: Int = KEYCLOAK_PORT,
-            config: MutableMap<String, String> = mutableMapOf(),
-            listOfClass: List<Class<*>> = emptyList()
-        ) = object : IKeycloakContainerConfig {
-            override var realmName: String = realmName
-            override var adminUsername: String = adminUsername
-            override var adminPassword: String = adminPassword
-            override var realmImportFile: String? = realmImportFile
-            override var port: Int = port
-            override val listOfClass: List<Class<*>> = listOfClass
+        fun default(
+            pRealmName: String = REALM_NAME,
+            pAdminUsername: String = ADMIN_USERNAME,
+            pAdminPassword: String = ADMIN_PASSWORD,
+            pRealmImportFile: String? = null,
+            pPort: Int = KEYCLOAK_PORT,
+            pConfig: MutableMap<String, String> = mutableMapOf(),
+            pListOfClass: List<Class<*>> = emptyList()
+        ) = KeycloakContainerCreateHandler(
+            object : IKeycloakContainerConfig {
+                override var realmName: String = pRealmName
+                override var adminUsername: String = pAdminUsername
+                override var adminPassword: String = pAdminPassword
+                override var realmImportFile: String? = pRealmImportFile
+                override var port: Int = pPort
+                override val listOfClass: List<Class<*>> = pListOfClass
 
-            override fun withConfig(): MutableMap<String, String> {
-                return config
-            }
-        }
+                override fun withConfig(): MutableMap<String, String> {
+                    return pConfig
+                }
+            })
     }
 
 
     override fun onContainerCreate(container: KeycloakContainer) {
+        println("Starting keycloak-Container: http://$AUTH_SERVER_HOST:$port")
         container.withAdminUsername(adminUsername)
             .withAdminPassword(adminPassword)
             .withRealmImportFile(realmImportFile)

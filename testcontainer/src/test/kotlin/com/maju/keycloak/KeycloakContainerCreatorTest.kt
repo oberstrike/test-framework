@@ -1,17 +1,15 @@
 package com.maju.keycloak
 
 import dasniko.testcontainers.keycloak.KeycloakContainer
-import com.maju.container.keycloak.KeycloakDefaultContainerCreatorImpl
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class KeycloakContainerCreatorTest {
 
 
-    private val keycloakContainerCreator = KeycloakDefaultContainerCreatorImpl()
-
     @Test
     fun testDefaultConfig() {
+        val keycloakContainerCreator = KeycloakDefaultContainerCreatorImpl()
         var container = keycloakContainerCreator.container
         Assertions.assertNotNull(container)
 
@@ -26,5 +24,21 @@ class KeycloakContainerCreatorTest {
 
     }
 
+
+    @Test
+    fun customConfigTest() {
+        val keycloakContainerCreator = KeycloakDefaultContainerCreatorImpl(
+            KeycloakContainerCreateHandler.default(
+                pPort = 8888,
+                pAdminUsername = "test",
+                pAdminPassword = "test"
+            )
+        )
+        val keycloakContainer = keycloakContainerCreator.createContainer() as KeycloakContainer
+        assert(keycloakContainer.exposedPorts.contains(8888))
+        assert(keycloakContainer.adminUsername == "test")
+        assert(keycloakContainer.adminPassword == "test")
+
+    }
 
 }
