@@ -1,4 +1,4 @@
-package com.maju.container
+package com.maju
 
 import org.testcontainers.containers.GenericContainer
 
