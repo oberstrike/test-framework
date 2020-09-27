@@ -23,6 +23,10 @@ dependencies {
     implementation("io.rest-assured:kotlin-extensions:4.3.1")
     implementation("io.rest-assured:rest-assured:4.3.1")
 
+
+    testImplementation("org.mock-server:mockserver-netty:5.3.0")
+    testImplementation("com.google.code.gson:gson:2.8.6")
+
     api(project(":testcontainer"))
 
 }

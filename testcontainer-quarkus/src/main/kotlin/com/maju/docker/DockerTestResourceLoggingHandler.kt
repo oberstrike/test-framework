@@ -1,4 +1,4 @@
-package com.maju
+package com.maju.docker
 
 
 import mu.KotlinLogging

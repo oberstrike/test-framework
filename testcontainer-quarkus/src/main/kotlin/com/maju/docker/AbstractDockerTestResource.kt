@@ -1,6 +1,7 @@
-package com.maju
+package com.maju.docker
 
 
+import com.maju.IContainerCreator
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager
 import org.testcontainers.containers.GenericContainer
 
