@@ -29,6 +29,8 @@ dependencies {
 
     api(project(":testcontainer"))
 
+    testApi(project(":testcontainer"))
+
 }
 
 val myGroupId = "com.maju.quarkus"

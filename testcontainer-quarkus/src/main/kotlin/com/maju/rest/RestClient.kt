@@ -1,13 +1,14 @@
 package com.maju.rest
 
+import com.maju.rest.request.*
 import io.restassured.module.kotlin.extensions.Given
 import io.restassured.specification.RequestSpecification
 
 interface IRestClient {
-    fun get(request: IRestRequest): RestResponse
-    fun post(request: IRestRequest): RestResponse
-    fun patch(request: IRestRequest): RestResponse
-    fun delete(request: IRestRequest): RestResponse
+    fun get(request: IGetRequest): RestResponse
+    fun post(request: IPostRequest): RestResponse
+    fun patch(request: IPatchRequest): RestResponse
+    fun delete(request: IDeleteRequest): RestResponse
 }
 
 class RestClient private constructor(
@@ -19,56 +20,50 @@ class RestClient private constructor(
         fun create(port: Int, basePath: String = ""): IRestClient = RestClient(basePath, port)
     }
 
-    private val onRequestCreateBuilders: List<OnRequestCreateBuilder> = emptyList()
+    private val getRequestHandler = GetRequestHandler()
 
-    override fun delete(request: IRestRequest): RestResponse {
-        return RestResponse(createRequest(request).delete(request.path))
+    private val postRequestHandler = PostRequestHandler()
+
+    private val deleteRequestHandler = DeleteRequestHandler()
+
+    private val patchRequestHandler = PatchRequestHandler()
+
+    override fun delete(request: IDeleteRequest): RestResponse {
+        val requestSpecification = createRequest()
+        deleteRequestHandler.onRequestCreate(requestSpecification, request)
+        return RestResponse(requestSpecification.delete(request.path))
     }
 
-    override fun get(request: IRestRequest): RestResponse {
-        return RestResponse(createRequest(request).get(request.path))
+    override fun get(request: IGetRequest): RestResponse {
+        val requestSpecification = createRequest()
+        getRequestHandler.onRequestCreate(requestSpecification, request)
+        return RestResponse(requestSpecification.get(request.path))
     }
 
-    override fun patch(request: IRestRequest): RestResponse {
-        return RestResponse(createRequest(request).patch(request.path))
+    override fun patch(request: IPatchRequest): RestResponse {
+        val requestSpecification = createRequest()
+        patchRequestHandler.onRequestCreate(requestSpecification, request)
+        return RestResponse(requestSpecification.patch(request.path))
     }
 
-    override fun post(request: IRestRequest): RestResponse {
-        return RestResponse(createRequest(request).post(request.path))
+    override fun post(request: IPostRequest): RestResponse {
+        val requestSpecification = createRequest()
+        postRequestHandler.onRequestCreate(requestSpecification, request)
+        return RestResponse(requestSpecification.post(request.path))
     }
 
-    private fun createRequest(request: IRestRequest): RequestSpecification {
+    private fun createRequest(): RequestSpecification {
         return Given {
-            if (request.params != null)
-                params(request.params)
-            if (request.restRequestAuth != null)
-                applyAuth(request.restRequestAuth!!)
-            if (request.contentType != null)
-                contentType(request.contentType)
-            if (request.body != null)
-                body(request.body)
-            onRequestCreateBuilders.forEach {
-                it.onRequestCreate(this)
-            }
-
+            basePath(basePath)
             log().all()
             port(port)
-            basePath(basePath)
         }
-
     }
 
-    interface OnRequestCreateBuilder {
-        fun onRequestCreate(requestSpecification: RequestSpecification): RequestSpecification
-    }
-}
 
-private fun RequestSpecification.applyAuth(
-    auth: RestRequestAuth<*>
-): RequestSpecification {
-    return when (auth) {
-        is BasicRestRequestAuth -> auth().preemptive().basic(auth.username, auth.password)
-        is BearerRestRequestAuth -> auth().preemptive().oauth2(auth.bearerToken)
-        else -> this
+    interface OnRequestCreateHandler<T : IGetRequest> {
+
+        fun onRequestCreate(requestSpecification: RequestSpecification, request: T): RequestSpecification
     }
 }
+
