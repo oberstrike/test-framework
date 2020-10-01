@@ -1,17 +1,16 @@
-package com.maju.rest.request
+package com.maju.rest.request.get
 
-import com.maju.rest.*
+import com.maju.rest.client.RestClient
+import com.maju.rest.request.base.IBaseRequest
+import com.maju.rest.request.auth.BasicRestRequestAuth
+import com.maju.rest.request.auth.BearerRestRequestAuth
+import com.maju.rest.request.auth.RestRequestAuth
+import io.restassured.http.ContentType
 import io.restassured.specification.RequestSpecification
 
-interface IGetRequest {
-    val path: String
-    val restRequestAuth: RestRequestAuth<*>?
-    val params: Map<String, *>?
-    val headers: Map<String, String>?
+interface IGetRequest: IBaseRequest
 
-}
-
-class GetRequest : IGetRequest {
+open class GetRequest : IGetRequest {
 
     override lateinit var path: String
 
@@ -19,8 +18,11 @@ class GetRequest : IGetRequest {
 
     override var params: Map<String, *>? = null
 
-    override val headers: Map<String, String>? = null
+    override var headers: Map<String, String>? = null
+
+    override var cookies: Map<String, *>? = null
 }
+
 
 
 class GetRequestHandler(private val params: Boolean = true) : RestClient.OnRequestCreateHandler<IGetRequest> {
@@ -36,6 +38,11 @@ class GetRequestHandler(private val params: Boolean = true) : RestClient.OnReque
                 applyAuth(request.restRequestAuth!!)
             if (request.headers != null)
                 headers(request.headers)
+            if(request.cookies != null)
+                cookies(request.cookies)
+
+            //contentType(ContentType.fromContentType(""))
+
 
             if (params) params(request.params)
         }

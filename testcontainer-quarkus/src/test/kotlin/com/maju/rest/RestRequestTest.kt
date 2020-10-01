@@ -1,18 +1,26 @@
 package com.maju.rest
 
-import com.maju.rest.request.IPostRequest
+import com.maju.rest.request.RestRequestFactory
+import com.maju.rest.request.auth.BasicRestRequestAuth
+import com.maju.rest.request.delete.delete
+import com.maju.rest.request.get.get
+import com.maju.rest.request.post.post
 import io.restassured.http.ContentType
 import org.junit.jupiter.api.Test
 
 class RestRequestTest {
 
+    private val params = mapOf("" to "")
+    private val path = "home"
+    private val body = "body"
+    private val contentType = ContentType.JSON.contentTypeStrings.first()
+    private val auth = BasicRestRequestAuth("oberstrike", "test123")
+
 
     @Test
     fun getRequestTest() {
-        val path = "/home"
-        val params = mapOf("test" to "test123")
 
-        val request = RestRequestBuilder.get() {
+        val request = RestRequestFactory.get {
             path(path)
             params(params)
         }
@@ -23,22 +31,14 @@ class RestRequestTest {
 
     @Test
     fun postRequestTest() {
-        val params = mapOf("" to "")
-        val path = "home"
-        val body = "body"
-        val contentType = ContentType.JSON
-        val auth = BasicRestRequestAuth("oberstrike", "test123")
 
-
-        val request = RestRequestBuilder.post {
+        val request = RestRequestFactory.post {
             params(params)
             path(path)
             body(body)
             contentType(contentType)
             auth(auth)
-        } as IPostRequest
-
-
+        }
 
         assert(request.params == params)
         assert(request.path == path)
@@ -46,5 +46,15 @@ class RestRequestTest {
         assert(request.contentType == contentType)
         assert(request.restRequestAuth == auth)
     }
+
+    @Test
+    fun deleteRequestTest() {
+        val request = RestRequestFactory.delete {
+            params(params)
+            path(path)
+            auth(auth)
+        }
+    }
+
 
 }

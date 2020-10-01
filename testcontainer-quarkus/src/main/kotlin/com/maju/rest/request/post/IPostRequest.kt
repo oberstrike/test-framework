@@ -1,27 +1,36 @@
-package com.maju.rest.request
+package com.maju.rest.request.post
 
-import com.maju.rest.RestClient
-import com.maju.rest.RestRequestAuth
+import com.maju.rest.client.RestClient
+import com.maju.rest.request.auth.RestRequestAuth
+import com.maju.rest.request.get.GetRequestHandler
+import com.maju.rest.request.get.IGetRequest
 import io.restassured.http.ContentType
 import io.restassured.specification.RequestSpecification
+import java.io.File
 
 interface IPostRequest : IGetRequest {
-    val contentType: ContentType?
-    val body: String?
+    var contentType: String?
+    var body: String?
+    val multipartFile: File?
 }
 
-class PostRequest : IPostRequest {
+
+open class PostRequest : IPostRequest {
     override lateinit var path: String
 
     override var restRequestAuth: RestRequestAuth<*>? = null
 
     override var params: Map<String, *>? = null
 
-    override val headers: Map<String, String>? = null
+    override var headers: Map<String, String>? = null
 
-    override var contentType: ContentType? = null
+    override var contentType: String? = null
 
     override var body: String? = null
+
+    override var cookies: Map<String, *>? = null
+
+    override var multipartFile: File? = null
 }
 
 
@@ -50,5 +59,10 @@ class PostRequestHandler : RestClient.OnRequestCreateHandler<IPostRequest> {
         } else {
             params(request.params)
         }
+        if (request.cookies != null)
+            cookies(request.cookies)
+        if (request.multipartFile != null)
+            multiPart(request.multipartFile)
+
     }
 }

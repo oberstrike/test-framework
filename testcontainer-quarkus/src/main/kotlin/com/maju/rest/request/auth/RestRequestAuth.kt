@@ -1,4 +1,4 @@
-package com.maju.rest
+package com.maju.rest.request.auth
 
 
 interface RestRequestAuth<T> {

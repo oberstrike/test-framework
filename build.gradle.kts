@@ -14,7 +14,9 @@ allprojects {
 
 }
 
+
 subprojects {
+
 
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         println("Configuring KotlinCompile  $name in project ${project.name}...")

@@ -1,25 +1,20 @@
-package com.maju.rest.request
+package com.maju.rest.request.delete
 
-import com.maju.rest.RestClient
-import com.maju.rest.RestRequestAuth
+import com.maju.rest.client.RestClient
+import com.maju.rest.request.auth.RestRequestAuth
+import com.maju.rest.request.get.GetRequest
+import com.maju.rest.request.get.GetRequestHandler
+import com.maju.rest.request.get.IGetRequest
 import io.restassured.http.ContentType
 import io.restassured.specification.RequestSpecification
 
 interface IDeleteRequest : IGetRequest {
-    var contentType: ContentType?
+    var contentType: String?
 }
 
-class DeleteRequest : IDeleteRequest {
+class DeleteRequest : IDeleteRequest, GetRequest() {
 
-    override lateinit var path: String
-
-    override var restRequestAuth: RestRequestAuth<*>? = null
-
-    override var params: Map<String, *>? = null
-
-    override val headers: Map<String, String>? = null
-
-    override var contentType: ContentType? = null
+    override var contentType: String? = null
 }
 
 class DeleteRequestHandler : RestClient.OnRequestCreateHandler<IDeleteRequest> {

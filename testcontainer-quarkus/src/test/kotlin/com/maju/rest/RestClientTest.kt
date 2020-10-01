@@ -1,6 +1,11 @@
 package com.maju.rest
 
 import com.google.gson.Gson
+import com.maju.rest.client.IRestClient
+import com.maju.rest.client.RestClient
+import com.maju.rest.request.RestRequestFactory
+import com.maju.rest.request.get.get
+import com.maju.rest.request.post.post
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -69,10 +74,11 @@ class RestClientTest {
     fun standardGetTest() {
         val client = createRestClient()
 
-        val request = RestRequestBuilder.get {
+        val request = RestRequestFactory.get {
             path(getPath)
             params(mapOf(restParam))
         }
+
 
         val response = client.get(request)
         val statusCode = response.statusCode
@@ -83,7 +89,7 @@ class RestClientTest {
     fun standardPostWithoutBodyTest() {
         val client = createRestClient()
 
-        val request = RestRequestBuilder.post {
+        val request = RestRequestFactory.post {
             path(postPathWithoutBody)
             param(restParam)
         }
@@ -100,7 +106,7 @@ class RestClientTest {
     fun standardPostWithBodyTest() {
         val client = createRestClient()
 
-        val request = RestRequestBuilder.post {
+        val request = RestRequestFactory.post {
             path(postPathWithBody)
             body(toJson(getProduct(0)))
             param(restParam)

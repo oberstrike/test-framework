@@ -1,6 +1,15 @@
-package com.maju.rest
+package com.maju.rest.client
 
-import com.maju.rest.request.*
+import com.maju.rest.request.base.IBaseRequest
+import com.maju.rest.request.delete.DeleteRequestHandler
+import com.maju.rest.request.delete.IDeleteRequest
+import com.maju.rest.request.get.GetRequestHandler
+import com.maju.rest.request.get.IGetRequest
+import com.maju.rest.request.pach.IPatchRequest
+import com.maju.rest.request.pach.PatchRequestHandler
+import com.maju.rest.request.post.IPostRequest
+import com.maju.rest.request.post.PostRequestHandler
+import com.maju.rest.response.RestResponse
 import io.restassured.module.kotlin.extensions.Given
 import io.restassured.specification.RequestSpecification
 
@@ -54,6 +63,7 @@ class RestClient private constructor(
 
     private fun createRequest(): RequestSpecification {
         return Given {
+
             basePath(basePath)
             log().all()
             port(port)
@@ -61,7 +71,7 @@ class RestClient private constructor(
     }
 
 
-    interface OnRequestCreateHandler<T : IGetRequest> {
+    interface OnRequestCreateHandler<T : IBaseRequest> {
 
         fun onRequestCreate(requestSpecification: RequestSpecification, request: T): RequestSpecification
     }
