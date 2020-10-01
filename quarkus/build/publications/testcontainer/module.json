@@ -1,0 +1,150 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.maju.quarkus",
+    "module": "quarkus",
+    "version": "1.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "6.3",
+      "buildId": "4s6fzczix5guvp3qqg4fsqhl5i"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.localToProject": "public",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "com.maju.container",
+          "module": "testcontainer",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "quarkus-1.0.0.jar",
+          "url": "quarkus-1.0.0.jar",
+          "size": 54897,
+          "sha512": "b7dfdfa0b8f7739e6b381b7c10d013cd22602314ae5271e8d2e1207bcdac389c976adfd88b0351d676c2fac6b5e0c9e4932b283a94663b844391fc5851f1e899",
+          "sha256": "bf92cbcdcedbbd213f422f87095fe28fe857e7e9616c995e030816b8cf3e043a",
+          "sha1": "caca9706550d0265718aac1b801b20eb14159b0a",
+          "md5": "7b1567a1df1db530626fdbae54440b16"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.localToProject": "public",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.3.71"
+          }
+        },
+        {
+          "group": "org.testcontainers",
+          "module": "testcontainers-bom",
+          "version": {
+            "requires": "1.14.3"
+          },
+          "attributes": {
+            "org.gradle.category": "platform"
+          },
+          "endorseStrictVersions": true
+        },
+        {
+          "group": "org.testcontainers",
+          "module": "testcontainers",
+          "version": {
+            "requires": "1.14.3"
+          }
+        },
+        {
+          "group": "io.github.microutils",
+          "module": "kotlin-logging",
+          "version": {
+            "requires": "1.12.0"
+          }
+        },
+        {
+          "group": "io.quarkus",
+          "module": "quarkus-test-common",
+          "version": {
+            "requires": "1.8.1.Final"
+          }
+        },
+        {
+          "group": "io.quarkus",
+          "module": "quarkus-junit5",
+          "version": {
+            "requires": "1.8.1.Final"
+          }
+        },
+        {
+          "group": "io.quarkus",
+          "module": "quarkus-junit5-mockito",
+          "version": {
+            "requires": "1.8.1.Final"
+          }
+        },
+        {
+          "group": "io.rest-assured",
+          "module": "kotlin-extensions",
+          "version": {
+            "requires": "4.3.1"
+          }
+        },
+        {
+          "group": "io.rest-assured",
+          "module": "rest-assured",
+          "version": {
+            "requires": "4.3.1"
+          }
+        },
+        {
+          "group": "com.maju.container",
+          "module": "testcontainer",
+          "version": {
+            "requires": "1.0.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "quarkus-1.0.0.jar",
+          "url": "quarkus-1.0.0.jar",
+          "size": 54897,
+          "sha512": "b7dfdfa0b8f7739e6b381b7c10d013cd22602314ae5271e8d2e1207bcdac389c976adfd88b0351d676c2fac6b5e0c9e4932b283a94663b844391fc5851f1e899",
+          "sha256": "bf92cbcdcedbbd213f422f87095fe28fe857e7e9616c995e030816b8cf3e043a",
+          "sha1": "caca9706550d0265718aac1b801b20eb14159b0a",
+          "md5": "7b1567a1df1db530626fdbae54440b16"
+        }
+      ]
+    }
+  ]
+}
