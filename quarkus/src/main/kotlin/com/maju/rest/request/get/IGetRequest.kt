@@ -5,7 +5,6 @@ import com.maju.rest.request.base.IBaseRequest
 import com.maju.rest.request.auth.BasicRestRequestAuth
 import com.maju.rest.request.auth.BearerRestRequestAuth
 import com.maju.rest.request.auth.RestRequestAuth
-import io.restassured.http.ContentType
 import io.restassured.specification.RequestSpecification
 
 interface IGetRequest: IBaseRequest
@@ -25,7 +24,7 @@ open class GetRequest : IGetRequest {
 
 
 
-class GetRequestHandler(private val params: Boolean = true) : RestClient.OnRequestCreateHandler<IGetRequest> {
+class GetRequestHandler(private val stricted: Boolean = true) : RestClient.OnRequestCreateHandler<IGetRequest> {
 
 
     override fun onRequestCreate(
@@ -42,9 +41,7 @@ class GetRequestHandler(private val params: Boolean = true) : RestClient.OnReque
                 cookies(request.cookies)
 
             //contentType(ContentType.fromContentType(""))
-
-
-            if (params) params(request.params)
+            if (stricted && request.params != null) params(request.params)
         }
 
     }

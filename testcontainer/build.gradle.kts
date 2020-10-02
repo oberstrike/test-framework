@@ -29,7 +29,7 @@ dependencies {
 
 val myGroupId = "com.maju.container"
 val myArtifactId = "testcontainer"
-val myVersion = "1.0.0"
+val myVersion = "1.0.2"
 
 val dokkaJavadocJar by tasks.creating(Jar::class) {
     dependsOn(tasks.dokkaJavadoc)

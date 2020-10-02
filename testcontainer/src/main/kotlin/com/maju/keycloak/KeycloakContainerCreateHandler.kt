@@ -69,7 +69,7 @@ class KeycloakContainerCreateHandler(
     override fun createConfig(): MutableMap<String, String> {
         val result = mutableMapOf<String, String>()
         val all = listOfClass.map {
-            "${it.`package`.name}.${it.simpleName}/mp-rest/url=" to
+            "${it.`package`.name}.${it.simpleName}/mp-rest/url" to
                     "http://localhost:$port/auth/realms/$realmName/protocol/openid-connect"
         }
 
