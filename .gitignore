@@ -1,4 +1,4 @@
 # Project exclude paths
 /.gradle/
 /testcontainer/build/
-/testcontainer-quarkus/build/
+/quarkus/build/
