@@ -4,6 +4,9 @@ package com.maju.docker
 import com.maju.IContainerCreator
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager
 import org.testcontainers.containers.GenericContainer
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 abstract class AbstractDockerTestResource : QuarkusTestResourceLifecycleManager {
@@ -38,11 +41,10 @@ abstract class AbstractDockerTestResource : QuarkusTestResourceLifecycleManager 
             }
     }
 
+    @Throws(InterruptedException::class)
     private fun startContainer(container: GenericContainer<out GenericContainer<*>?>) {
         if (!containers.contains(container)) containers.add(container)
-        do {
-            container.start()
-        } while (!container.isRunning())
+        container.start()
         onStartHandlers.forEach { it.onStart(container) }
     }
 

@@ -24,12 +24,12 @@ dependencies {
     implementation("org.testcontainers:junit-jupiter:1.14.3")
     implementation("org.testcontainers:postgresql:1.14.3")
     implementation("org.slf4j:slf4j-simple:1.7.30")
-
+    testImplementation ("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 }
 
 val myGroupId = "com.maju.container"
 val myArtifactId = "testcontainer"
-val myVersion = "1.0.2"
+val myVersion = "1.0.0"
 
 val dokkaJavadocJar by tasks.creating(Jar::class) {
     dependsOn(tasks.dokkaJavadoc)

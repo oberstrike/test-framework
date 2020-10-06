@@ -4,7 +4,7 @@ import dasniko.testcontainers.keycloak.KeycloakContainer
 import com.maju.AbstractContainerCreator
 
 
-private val defaultKeycloakHandler = KeycloakContainerCreateHandler.default()
+private val defaultKeycloakHandler = KeycloakOnContainerCreateHandler.default()
 
 
 class KeycloakDefaultContainerCreatorImpl(

@@ -1,6 +1,6 @@
 package com.maju.rest.request.get
 
-import com.maju.rest.request.auth.RestRequestAuth
+import com.maju.rest.request.auth.IRequestAuth
 import com.maju.rest.request.base.IBaseRequestBuilder
 import com.maju.rest.request.base.IRequestBuilder
 import com.maju.rest.request.RestRequestFactory
@@ -20,8 +20,8 @@ open class GetRequestBuilder(protected open val request: IGetRequest) : IGetRequ
         request.path = path
     }
 
-    override fun auth(restRequestAuth: RestRequestAuth<*>): IBaseRequestBuilder = apply {
-        request.restRequestAuth = restRequestAuth
+    override fun auth(requestAuth: IRequestAuth<*>): IBaseRequestBuilder = apply {
+        request.requestAuth = requestAuth
     }
 
     override fun params(params: Map<String, *>): IBaseRequestBuilder = apply {

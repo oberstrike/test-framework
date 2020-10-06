@@ -14,7 +14,7 @@ interface IPatchRequestBuilder : IPostRequestBuilder {
 class PatchRequestBuilder(override val request: IPatchRequest = PatchRequest()) : IPatchRequestBuilder,
     PostRequestBuilder(request) {
     companion object {
-        fun create(path: String): IPatchRequestBuilder = PatchRequestBuilder()
+        fun create(path: String): IPatchRequestBuilder = PatchRequestBuilder().apply { path(path) }
     }
 
     override fun build(): IPatchRequest {

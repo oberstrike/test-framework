@@ -6,7 +6,7 @@ import com.maju.AbstractContainerCreator
 
 
 class PostgresOnContainerCreateHandler(
-    private val defaultConfig: IPostgresDefaultConfig
+    private val defaultConfig: IPostgresConfig
 ) : AbstractContainerCreator.IContainerCreateHandler<KPostgreSQLContainer> {
 
     companion object {
@@ -21,20 +21,22 @@ class PostgresOnContainerCreateHandler(
             username: String = USERNAME,
             password: String = PASSWORD,
             port: Int = PORT,
-            initScriptPath: String? = null
+            initScriptPath: String? = null,
+            pConfig: MutableMap<String, String> = mutableMapOf()
         ) = PostgresOnContainerCreateHandler(
-            object : IPostgresDefaultConfig {
-                override var dbName: String = dbName
-                override var password: String = password
-                override var username: String = username
-                override var port: Int = port
-                override var initScriptPath: String? = initScriptPath
-            }
+            DefaultPostgresConfig(
+                username = username,
+                dbName = dbName,
+                password = password,
+                port = port,
+                initScriptPath = initScriptPath,
+                pConfig = pConfig
+            )
         )
     }
 
-    override fun onContainerCreate(container: KPostgreSQLContainer) {
-        container.apply {
+    override fun onContainerCreate(container: KPostgreSQLContainer): KPostgreSQLContainer {
+        return container.apply {
             withDatabaseName(defaultConfig.dbName)
             withUsername(defaultConfig.username)
             withPassword(defaultConfig.password)
@@ -57,14 +59,29 @@ class PostgresOnContainerCreateHandler(
             "quarkus.datasource.password" to defaultConfig.password,
             "quarkus.datasource.username" to defaultConfig.username,
             "quarkus.datasource.db-kind" to DB_KIND
-        )
+        ).apply { putAll(defaultConfig.withConfig()) }
     }
 
-    interface IPostgresDefaultConfig {
+    interface IPostgresConfig {
         var username: String
         var password: String
         var port: Int
         var dbName: String
         var initScriptPath: String?
+        fun withConfig(): MutableMap<String, String>
     }
+
+    data class DefaultPostgresConfig(
+        override var username: String,
+        override var password: String,
+        override var port: Int,
+        override var dbName: String,
+        override var initScriptPath: String?,
+        var pConfig: MutableMap<String, String>
+    ) : IPostgresConfig {
+        override fun withConfig(): MutableMap<String, String> {
+            return pConfig
+        }
+    }
+
 }

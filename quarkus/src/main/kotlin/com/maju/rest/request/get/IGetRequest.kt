@@ -2,9 +2,9 @@ package com.maju.rest.request.get
 
 import com.maju.rest.client.RestClient
 import com.maju.rest.request.base.IBaseRequest
-import com.maju.rest.request.auth.BasicRestRequestAuth
-import com.maju.rest.request.auth.BearerRestRequestAuth
-import com.maju.rest.request.auth.RestRequestAuth
+import com.maju.rest.request.auth.BasicRequestAuth
+import com.maju.rest.request.auth.BearerRequestAuth
+import com.maju.rest.request.auth.IRequestAuth
 import io.restassured.specification.RequestSpecification
 
 interface IGetRequest: IBaseRequest
@@ -13,7 +13,7 @@ open class GetRequest : IGetRequest {
 
     override lateinit var path: String
 
-    override var restRequestAuth: RestRequestAuth<*>? = null
+    override var requestAuth: IRequestAuth<*>? = null
 
     override var params: Map<String, *>? = null
 
@@ -33,8 +33,8 @@ class GetRequestHandler(private val stricted: Boolean = true) : RestClient.OnReq
     ): RequestSpecification {
 
         return requestSpecification.apply {
-            if (request.restRequestAuth != null)
-                applyAuth(request.restRequestAuth!!)
+            if (request.requestAuth != null)
+                applyAuth(request.requestAuth!!)
             if (request.headers != null)
                 headers(request.headers)
             if(request.cookies != null)
@@ -46,10 +46,10 @@ class GetRequestHandler(private val stricted: Boolean = true) : RestClient.OnReq
 
     }
 
-    private fun RequestSpecification.applyAuth(auth: RestRequestAuth<*>): RequestSpecification? {
+    private fun RequestSpecification.applyAuth(auth: IRequestAuth<*>): RequestSpecification? {
         return when (auth) {
-            is BasicRestRequestAuth -> auth().preemptive().basic(auth.username, auth.password)
-            is BearerRestRequestAuth -> auth().preemptive().oauth2(auth.bearerToken)
+            is BasicRequestAuth -> auth().preemptive().basic(auth.username, auth.password)
+            is BearerRequestAuth -> auth().preemptive().oauth2(auth.bearerToken)
             else -> this
         }
     }

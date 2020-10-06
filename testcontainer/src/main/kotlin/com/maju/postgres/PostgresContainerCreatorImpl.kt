@@ -3,18 +3,18 @@ package com.maju.postgres
 import com.maju.AbstractContainerCreator
 import org.testcontainers.containers.PostgreSQLContainer
 
-const val postgresContainerName = "postgres"
-
-class KPostgreSQLContainer : PostgreSQLContainer<KPostgreSQLContainer>(postgresContainerName)
 
 private val defaultPostgresHandler = PostgresOnContainerCreateHandler.default()
 
+private val defaultPostgresContainer = KPostgreSQLContainer()
+
 class PostgresContainerCreatorImpl(
-    postgresOnContainerCreatedHandler: PostgresOnContainerCreateHandler = defaultPostgresHandler
+    postgresOnContainerCreatedHandler: IContainerCreateHandler<KPostgreSQLContainer> = defaultPostgresHandler,
+    postgresContainer: KPostgreSQLContainer = defaultPostgresContainer
 ) :
     AbstractContainerCreator<KPostgreSQLContainer>() {
 
-    override val container: KPostgreSQLContainer = KPostgreSQLContainer()
+    override val container: KPostgreSQLContainer = postgresContainer
 
     override val onContainersCreateHandlers: List<IOnContainerCreateHandler<KPostgreSQLContainer>> = listOf(
         postgresOnContainerCreatedHandler

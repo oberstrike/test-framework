@@ -7,8 +7,8 @@ import com.maju.util.put
 import dasniko.testcontainers.keycloak.KeycloakContainer
 
 
-class KeycloakContainerCreateHandler(
-    private val keycloakContainerConfig: IKeycloakContainerConfig
+class KeycloakOnContainerCreateHandler(
+    keycloakContainerConfig: IKeycloakContainerConfig
 ) : AbstractContainerCreator.IContainerCreateHandler<KeycloakContainer> {
 
     private var realmName = keycloakContainerConfig.realmName
@@ -17,6 +17,7 @@ class KeycloakContainerCreateHandler(
     private var realmImportFile: String? = keycloakContainerConfig.realmImportFile
     private var port = keycloakContainerConfig.port
     private var listOfClass: List<Class<*>> = keycloakContainerConfig.listOfClass
+    private var config: MutableMap<String, String> = keycloakContainerConfig.withConfig()
 
     companion object {
         const val AUTH_SERVER_HOST = "localhost"
@@ -36,25 +37,23 @@ class KeycloakContainerCreateHandler(
             pPort: Int = KEYCLOAK_PORT,
             pConfig: MutableMap<String, String> = mutableMapOf(),
             pListOfClass: List<Class<*>> = emptyList()
-        ) = KeycloakContainerCreateHandler(
-            object : IKeycloakContainerConfig {
-                override var realmName: String = pRealmName
-                override var adminUsername: String = pAdminUsername
-                override var adminPassword: String = pAdminPassword
-                override var realmImportFile: String? = pRealmImportFile
-                override var port: Int = pPort
-                override val listOfClass: List<Class<*>> = pListOfClass
-
-                override fun withConfig(): MutableMap<String, String> {
-                    return pConfig
-                }
-            })
+        ) = KeycloakOnContainerCreateHandler(
+            DefaultKeycloakConfig(
+                pRealmName,
+                pAdminUsername,
+                pAdminPassword,
+                pRealmImportFile,
+                pPort,
+                pListOfClass,
+                pConfig
+            )
+        )
     }
 
 
-    override fun onContainerCreate(container: KeycloakContainer) {
+    override fun onContainerCreate(container: KeycloakContainer): KeycloakContainer {
         println("Starting keycloak-Container: http://$AUTH_SERVER_HOST:$port")
-        container.withAdminUsername(adminUsername)
+        return container.withAdminUsername(adminUsername)
             .withAdminPassword(adminPassword)
             .withRealmImportFile(realmImportFile)
             .withExposedPorts(port)
@@ -67,16 +66,14 @@ class KeycloakContainerCreateHandler(
 
 
     override fun createConfig(): MutableMap<String, String> {
-        val result = mutableMapOf<String, String>()
         val all = listOfClass.map {
             "${it.`package`.name}.${it.simpleName}/mp-rest/url" to
                     "http://localhost:$port/auth/realms/$realmName/protocol/openid-connect"
         }
 
-        result.putAll(all)
-        result.put("quarkus.oidc.auth-server-url" to "http://localhost:$port/auth/realms/$realmName")
-
-        return result
+        config.putAll(all)
+        config.put("quarkus.oidc.auth-server-url" to "http://localhost:$port/auth/realms/$realmName")
+        return config
 
     }
 
@@ -90,6 +87,20 @@ class KeycloakContainerCreateHandler(
         val listOfClass: List<Class<*>>
 
         fun withConfig(): MutableMap<String, String>
+    }
+
+    data class DefaultKeycloakConfig(
+        override var realmName: String,
+        override var adminUsername: String,
+        override var adminPassword: String,
+        override var realmImportFile: String?,
+        override var port: Int,
+        override val listOfClass: List<Class<*>>,
+        val pConfig: MutableMap<String, String>
+    ) : IKeycloakContainerConfig {
+        override fun withConfig(): MutableMap<String, String> {
+            return pConfig
+        }
     }
 
 

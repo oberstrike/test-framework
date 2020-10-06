@@ -11,9 +11,8 @@ abstract class AbstractContainerCreator<T : GenericContainer<T>> : IContainerCre
     open val onConfigCreateHandlers: List<IOnConfigCreateHandler<T>> = emptyList()
 
     override fun createContainer(): GenericContainer<T> {
-        onContainersCreateHandlers.forEach {
-            it.onContainerCreate(container)
-        }
+        if (onContainersCreateHandlers.isNotEmpty())
+            onContainersCreateHandlers.forEach { it.onContainerCreate(container) }
         return container
     }
 
@@ -30,7 +29,7 @@ abstract class AbstractContainerCreator<T : GenericContainer<T>> : IContainerCre
     }
 
     interface IOnContainerCreateHandler<T> {
-        fun onContainerCreate(container: T)
+        fun onContainerCreate(container: T): T
     }
 
     interface IOnConfigCreateHandler<T> {

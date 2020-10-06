@@ -24,6 +24,7 @@ dependencies {
     implementation("io.rest-assured:rest-assured:4.3.1")
 
 
+    testImplementation("org.mockito:mockito-core:2.21.0")
     testImplementation("org.mock-server:mockserver-netty:5.3.0")
     testImplementation("com.google.code.gson:gson:2.8.6")
 
@@ -35,7 +36,7 @@ dependencies {
 
 val myGroupId = "com.maju.quarkus"
 val myArtifactId = "quarkus"
-val myVersion = "1.0.2"
+val myVersion = "1.0.0"
 
 val dokkaJavadocJar by tasks.creating(Jar::class) {
     dependsOn(tasks.dokkaJavadoc)

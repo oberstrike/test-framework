@@ -1,12 +1,9 @@
 package com.maju.rest.request.pach
 
 import com.maju.rest.client.RestClient
-import com.maju.rest.request.auth.RestRequestAuth
-import com.maju.rest.request.get.GetRequest
 import com.maju.rest.request.post.IPostRequest
 import com.maju.rest.request.post.PostRequest
 import com.maju.rest.request.post.PostRequestHandler
-import io.restassured.http.ContentType
 import io.restassured.specification.RequestSpecification
 
 interface IPatchRequest : IPostRequest

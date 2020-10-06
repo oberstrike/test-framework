@@ -3,8 +3,9 @@ package com.maju.docker
 import com.maju.postgres.PostgresContainerCreatorImpl
 import com.maju.postgres.PostgresOnContainerCreateHandler
 import org.junit.jupiter.api.Test
+import org.testcontainers.containers.GenericContainer
 
-class ExampleResourceTest {
+class AbstractDockerTestResourceTest {
 
     companion object {
         const val PORT = 5555
@@ -14,7 +15,7 @@ class ExampleResourceTest {
     }
 
     @Test
-    fun test() {
+    fun standardConfigTest() {
         val resource = TestDockerPostgresResource()
         val config = resource.start()
         assert(config.isNotEmpty())
@@ -24,8 +25,13 @@ class ExampleResourceTest {
         resource.stop()
     }
 
-    class TestDockerPostgresResource : AbstractDockerTestResource() {
+    class TestOnStopHandler: AbstractDockerTestResource.IOnStopHandler{
+        override fun onStop(container: GenericContainer<*>) {
+            println("$container stopps")
+        }
+    }
 
+    class TestDockerPostgresResource : AbstractDockerTestResource() {
 
         override val containerCreators = listOf(
             PostgresContainerCreatorImpl(
@@ -37,6 +43,8 @@ class ExampleResourceTest {
                 )
             )
         )
+
+        override val onStopHandlers: List<IOnStopHandler> = listOf(TestOnStopHandler())
 
 
         override fun start(): MutableMap<String, String> {

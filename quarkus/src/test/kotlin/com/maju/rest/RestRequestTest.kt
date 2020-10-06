@@ -1,7 +1,8 @@
 package com.maju.rest
 
 import com.maju.rest.request.RestRequestFactory
-import com.maju.rest.request.auth.BasicRestRequestAuth
+import com.maju.rest.request.auth.BasicRequestAuth
+import com.maju.rest.request.auth.RequestAuth
 import com.maju.rest.request.delete.delete
 import com.maju.rest.request.get.get
 import com.maju.rest.request.pach.patch
@@ -15,7 +16,7 @@ class RestRequestTest {
     private val path = "home"
     private val body = "body"
     private val contentType = ContentType.JSON.contentTypeStrings.first()
-    private val auth = BasicRestRequestAuth("oberstrike", "test123")
+    private val auth = RequestAuth.basic("oberstrike", "test123")
 
 
     @Test
@@ -45,7 +46,7 @@ class RestRequestTest {
         assert(request.path == path)
         assert(request.body == body)
         assert(request.contentType == contentType)
-        assert(request.restRequestAuth == auth)
+        assert(request.requestAuth == auth)
     }
 
     @Test
@@ -60,12 +61,12 @@ class RestRequestTest {
         assert(request.params == params)
         assert(request.path == path)
         assert(request.contentType == contentType)
-        assert(request.restRequestAuth == auth)
+        assert(request.requestAuth == auth)
         assert(request.contentType == contentType)
     }
 
     @Test
-    fun patchRequestTest(){
+    fun patchRequestTest() {
         val request = RestRequestFactory.patch {
             params(params)
             path(path)
@@ -78,7 +79,7 @@ class RestRequestTest {
         assert(request.params == params)
         assert(request.path == path)
         assert(request.contentType == contentType)
-        assert(request.restRequestAuth == auth)
+        assert(request.requestAuth == auth)
         assert(request.contentType == contentType)
     }
 

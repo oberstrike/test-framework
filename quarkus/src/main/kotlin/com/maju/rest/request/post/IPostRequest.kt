@@ -1,10 +1,9 @@
 package com.maju.rest.request.post
 
 import com.maju.rest.client.RestClient
-import com.maju.rest.request.auth.RestRequestAuth
+import com.maju.rest.request.auth.IRequestAuth
 import com.maju.rest.request.get.GetRequestHandler
 import com.maju.rest.request.get.IGetRequest
-import io.restassured.http.ContentType
 import io.restassured.specification.RequestSpecification
 import java.io.File
 
@@ -18,7 +17,7 @@ interface IPostRequest : IGetRequest {
 open class PostRequest : IPostRequest {
     override lateinit var path: String
 
-    override var restRequestAuth: RestRequestAuth<*>? = null
+    override var requestAuth: IRequestAuth<*>? = null
 
     override var params: Map<String, *>? = null
 
@@ -56,7 +55,7 @@ class PostRequestHandler : RestClient.OnRequestCreateHandler<IPostRequest> {
             body(request.body)
         if (request.params != null && request.body != null) {
             queryParams(request.params)
-        } else {
+        } else if (request.params != null) {
             params(request.params)
         }
         if (request.cookies != null)

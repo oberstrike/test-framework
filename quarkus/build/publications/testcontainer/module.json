@@ -11,7 +11,7 @@
   "createdBy": {
     "gradle": {
       "version": "6.3",
-      "buildId": "4s6fzczix5guvp3qqg4fsqhl5i"
+      "buildId": "axhxsaqvinb7vekeoimmqqvlhi"
     }
   },
   "variants": [
@@ -39,11 +39,11 @@
         {
           "name": "quarkus-1.0.0.jar",
           "url": "quarkus-1.0.0.jar",
-          "size": 54897,
-          "sha512": "b7dfdfa0b8f7739e6b381b7c10d013cd22602314ae5271e8d2e1207bcdac389c976adfd88b0351d676c2fac6b5e0c9e4932b283a94663b844391fc5851f1e899",
-          "sha256": "bf92cbcdcedbbd213f422f87095fe28fe857e7e9616c995e030816b8cf3e043a",
-          "sha1": "caca9706550d0265718aac1b801b20eb14159b0a",
-          "md5": "7b1567a1df1db530626fdbae54440b16"
+          "size": 54914,
+          "sha512": "959d17593e3c0783c67efa7540c3262af191476cfaac194ecdc586ada6fce7efe8803f9cafeba584c39b7a003bc1057d7c0b1036ddd1e40dfb04d69e32f0ee59",
+          "sha256": "742a6e75e372a463226652e08c8310733ff55f8993f8e4ff259a157f1313bed5",
+          "sha1": "ed6445bb9cb8f96a1f64d1874c5f732893b2e6e4",
+          "md5": "ba466d867594702f9eb0a8142ccaec6d"
         }
       ]
     },
@@ -138,11 +138,11 @@
         {
           "name": "quarkus-1.0.0.jar",
           "url": "quarkus-1.0.0.jar",
-          "size": 54897,
-          "sha512": "b7dfdfa0b8f7739e6b381b7c10d013cd22602314ae5271e8d2e1207bcdac389c976adfd88b0351d676c2fac6b5e0c9e4932b283a94663b844391fc5851f1e899",
-          "sha256": "bf92cbcdcedbbd213f422f87095fe28fe857e7e9616c995e030816b8cf3e043a",
-          "sha1": "caca9706550d0265718aac1b801b20eb14159b0a",
-          "md5": "7b1567a1df1db530626fdbae54440b16"
+          "size": 54914,
+          "sha512": "959d17593e3c0783c67efa7540c3262af191476cfaac194ecdc586ada6fce7efe8803f9cafeba584c39b7a003bc1057d7c0b1036ddd1e40dfb04d69e32f0ee59",
+          "sha256": "742a6e75e372a463226652e08c8310733ff55f8993f8e4ff259a157f1313bed5",
+          "sha1": "ed6445bb9cb8f96a1f64d1874c5f732893b2e6e4",
+          "md5": "ba466d867594702f9eb0a8142ccaec6d"
         }
       ]
     }
