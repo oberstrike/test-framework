@@ -1,7 +1,7 @@
 package com.maju.rest
 
 import org.mockserver.client.ForwardChainExpectation
-import org.mockserver.client.server.MockServerClient
+import org.mockserver.client.MockServerClient
 import org.mockserver.matchers.Times
 import org.mockserver.model.Cookie
 import org.mockserver.model.Header
@@ -14,7 +14,7 @@ fun request(path: String,
             queryParameters: List<Pair<String, String>> = emptyList(),
             headers: List<Pair<String, String>> = emptyList(),
             cookies: List<Pair<String, String>> = emptyList()): HttpRequest =
-    org.mockserver.model.HttpRequest.request(path)
+    HttpRequest.request(path)
         .withMethod(method)
         .withBody(body)
         .withQueryStringParameters(queryParameters.map { (name, value) -> Parameter(name, value) })

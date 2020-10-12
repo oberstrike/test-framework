@@ -22,11 +22,13 @@ abstract class AbstractDockerTestResource : QuarkusTestResourceLifecycleManager 
     private val containers = mutableListOf<GenericContainer<*>>()
 
     override fun start(): MutableMap<String, String> {
+        if (containerCreators.isEmpty())
+            return mutableMapOf()
+
         containerCreators.map { creator ->
             creator.createContainer()
         }.forEach(this::startContainer)
 
-        if (containerCreators.isEmpty()) return mutableMapOf()
 
         return containerCreators
             .map { it.createConfig() }
@@ -35,8 +37,10 @@ abstract class AbstractDockerTestResource : QuarkusTestResourceLifecycleManager 
                     putAll(mutableMap)
                 }
             }.apply {
-                onConfigCreatedHandler.forEach { handler ->
-                    handler.onConfigCreated(this)
+                if (onConfigCreatedHandler.isNotEmpty()) {
+                    onConfigCreatedHandler.forEach { handler ->
+                        handler.onConfigCreated(this)
+                    }
                 }
             }
     }
@@ -50,6 +54,8 @@ abstract class AbstractDockerTestResource : QuarkusTestResourceLifecycleManager 
 
 
     override fun stop() {
+        if (containers.isEmpty()) return
+
         containers.forEach { container ->
             if (container.isRunning()) container.stop()
             onStopHandlers.forEach {

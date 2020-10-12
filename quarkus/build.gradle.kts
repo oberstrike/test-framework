@@ -11,21 +11,25 @@ dependencies {
 
     implementation(kotlin("stdlib-jdk8"))
 
-    val quarkusVersion = "1.8.1.Final"
+    val quarkusVersion = "1.8.3.Final"
+    val testcontainerVersion = "1.14.3"
+    val restassured = "4.3.1"
 
-    implementation(platform("org.testcontainers:testcontainers-bom:1.14.3")) //import bom
-    implementation("org.testcontainers:testcontainers:1.14.3")
+    implementation(platform("org.testcontainers:testcontainers-bom:$testcontainerVersion")) //import bom
+    implementation("org.testcontainers:testcontainers:$testcontainerVersion")
     implementation("io.github.microutils:kotlin-logging:1.12.0")
 
+ //   implementation("io.quarkus:quarkus-keycloak-admin-client:$quarkusVersion")
+ //   implementation("io.quarkus:quarkus-kotlin:$quarkusVersion")
     implementation("io.quarkus:quarkus-test-common:$quarkusVersion")
     implementation("io.quarkus:quarkus-junit5:$quarkusVersion")
     implementation("io.quarkus:quarkus-junit5-mockito:$quarkusVersion")
-    implementation("io.rest-assured:kotlin-extensions:4.3.1")
-    implementation("io.rest-assured:rest-assured:4.3.1")
 
+    implementation("io.rest-assured:kotlin-extensions:$restassured")
+    implementation("io.rest-assured:rest-assured:$restassured")
 
     testImplementation("org.mockito:mockito-core:2.21.0")
-    testImplementation("org.mock-server:mockserver-netty:5.3.0")
+    testImplementation("org.mock-server:mockserver-netty:5.11.1")
     testImplementation("com.google.code.gson:gson:2.8.6")
 
     api(project(":testcontainer"))

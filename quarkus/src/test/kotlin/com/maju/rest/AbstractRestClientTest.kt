@@ -4,7 +4,8 @@ import com.google.gson.Gson
 import com.maju.rest.client.IRestClient
 import com.maju.rest.client.RestClient
 import com.maju.rest.response.RestResponse
-import org.mockserver.client.server.MockServerClient
+import org.mockserver.client.MockServerClient
+
 import org.mockserver.integration.ClientAndServer
 import org.mockserver.model.HttpRequest
 import org.mockserver.model.HttpResponse
@@ -37,12 +38,10 @@ abstract class AbstractRestClientTest {
     open fun prepare() {
         mockServer = ClientAndServer.startClientAndServer(port)
 
+
         //Post-Request  with
         mockServer.given(
-            HttpRequest.request()
-                .withMethod("POST")
-                .withPath(postPathWithoutBody)
-                .withBody("name=oberstrike")
+            request(method = "POST", path = postPathWithoutBody, body = "name=oberstrike")
         ).respond(
             HttpResponse.response()
                 .withStatusCode(200)
@@ -50,10 +49,7 @@ abstract class AbstractRestClientTest {
 
         //Post request
         mockServer.given(
-            HttpRequest.request()
-                .withMethod("POST")
-                .withPath(postPathWithBody)
-                .withBody(toJson(getProduct(0)))
+            request(method = "POST", path = postPathWithBody, body = toJson(getProduct(0)))
         ).respond(
             HttpResponse.response()
                 .withBody(toJson(getProduct(1)))
