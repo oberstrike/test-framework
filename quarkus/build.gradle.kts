@@ -12,28 +12,17 @@ dependencies {
 
     implementation(kotlin("stdlib-jdk8"))
 
-    val quarkusVersion = "1.8.3.Final"
-    val testcontainerVersion = "1.14.3"
-    val restassured = "4.3.1"
+    val restassured = "4.3.3"
 
-    implementation(platform("org.testcontainers:testcontainers-bom:$testcontainerVersion")) //import bom
-    implementation("org.testcontainers:testcontainers:$testcontainerVersion")
     implementation("io.github.microutils:kotlin-logging:1.12.0")
-    
     implementation("io.rest-assured:kotlin-extensions:$restassured")
     implementation("io.rest-assured:rest-assured:$restassured")
-
     testImplementation("org.mockito:mockito-core:2.21.0")
     testImplementation("org.mock-server:mockserver-netty:5.11.1")
     testImplementation("com.google.code.gson:gson:2.8.6")
     implementation(kotlin("stdlib-jdk8"))
     testImplementation(platform("org.junit:junit-bom:5.7.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-
-    api(project(":testcontainer"))
-
-    testApi(project(":testcontainer"))
-
 }
 
 tasks.test {
@@ -44,8 +33,8 @@ tasks.test {
 }
 
 
-val myGroupId = "com.maju.quarkus"
-val myArtifactId = "quarkus"
+val myGroupId = "com.maju.rest"
+val myArtifactId = "rest"
 val myVersion = "1.0.0"
 
 val dokkaJavadocJar by tasks.creating(Jar::class) {
@@ -77,7 +66,7 @@ val pomDeveloperName = "Markus Jürgens"
 
 publishing {
     publications {
-        create<MavenPublication>("testcontainer") {
+        create<MavenPublication>("rest") {
             groupId = myGroupId
             artifactId = myArtifactId
             version = myVersion
@@ -118,7 +107,7 @@ bintray {
     key = project.findProperty("bintrayKey").toString()
     publish = !project.version.toString().endsWith("SNAPSHOT")
 
-    setPublications("testcontainer")
+    setPublications("rest")
 
     pkg.apply {
         repo = "maven"
