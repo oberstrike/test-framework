@@ -4,13 +4,15 @@ import com.maju.rest.client.RestClient
 import com.maju.rest.request.auth.IRequestAuth
 import com.maju.rest.request.get.GetRequestHandler
 import com.maju.rest.request.get.IGetRequest
+import com.maju.rest.response.RestResponse
+import io.restassured.specification.MultiPartSpecification
 import io.restassured.specification.RequestSpecification
 import java.io.File
 
 interface IPostRequest : IGetRequest {
     var contentType: String?
-    var body: String?
-    val multipartFile: File?
+    var body: Any?
+    var multipartFile: MultiPartSpecification?
 }
 
 
@@ -25,11 +27,11 @@ open class PostRequest : IPostRequest {
 
     override var contentType: String? = null
 
-    override var body: String? = null
+    override var body: Any? = null
 
     override var cookies: Map<String, *>? = null
 
-    override var multipartFile: File? = null
+    override var multipartFile: MultiPartSpecification? = null
 }
 
 
@@ -37,16 +39,16 @@ class PostRequestHandler : RestClient.OnRequestCreateHandler<IPostRequest> {
 
     var getRequestHandler = GetRequestHandler(false)
 
-    override fun onRequestCreate(
-        requestSpecification: RequestSpecification,
-        request: IPostRequest
-    ): RequestSpecification {
+    override fun onRequestCreate(requestSpecification: RequestSpecification, request: IPostRequest)
+            : RestResponse {
         getRequestHandler.onRequestCreate(requestSpecification, request)
         return requestSpecification.apply {
             applyPost(request)
+        }.let {
+            RestResponse(it.post(request.path))
         }
-    }
 
+    }
 
     private fun RequestSpecification.applyPost(request: IPostRequest) {
         if (request.contentType != null)

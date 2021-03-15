@@ -6,18 +6,22 @@ import com.maju.rest.request.RestRequestFactory
 import com.maju.rest.request.get.GetRequestBuilder
 import com.maju.rest.request.get.IGetRequestBuilder
 import io.restassured.http.ContentType
+import io.restassured.specification.MultiPartSpecification
 
 interface IPostRequestBuilder : IGetRequestBuilder {
     fun contentType(contentType: String): IPostRequestBuilder
 
     fun body(body: String): IPostRequestBuilder
 
+    fun file(multiPartSpecification: MultiPartSpecification): IPostRequestBuilder
+
     override fun build(): IPostRequest
 
 }
 
 
-open class PostRequestBuilder(override val request: IPostRequest = PostRequest()) : IPostRequestBuilder, GetRequestBuilder(request) {
+open class PostRequestBuilder(override val request: IPostRequest = PostRequest()) : IPostRequestBuilder,
+    GetRequestBuilder(request) {
 
 
     companion object {
@@ -34,6 +38,10 @@ open class PostRequestBuilder(override val request: IPostRequest = PostRequest()
 
     override fun body(body: String): IPostRequestBuilder = apply {
         request.body = body
+    }
+
+    override fun file(multiPartSpecification: MultiPartSpecification) = apply {
+        request.multipartFile = multiPartSpecification
     }
 
     override fun build(): IPostRequest {

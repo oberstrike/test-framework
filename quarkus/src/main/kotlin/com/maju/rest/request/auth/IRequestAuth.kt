@@ -6,23 +6,24 @@ interface IRequestAuth<T> {
 }
 
 
-data class BasicRequestAuth(
-    val username: String,
-    val password: String
-) : IRequestAuth<Pair<String, String>> {
-
-    override fun auth(): Pair<String, String> {
-        return username to password
-    }
-}
-
-data class BearerRequestAuth(
-    val bearerToken: String
-) : IRequestAuth<String> {
-    override fun auth(): String = bearerToken
-}
-
 object RequestAuth {
+
+    internal data class BearerRequestAuth(
+        val bearerToken: String
+    ) : IRequestAuth<String> {
+        override fun auth(): String = bearerToken
+    }
+
+    internal data class BasicRequestAuth(
+        val username: String,
+        val password: String
+    ) : IRequestAuth<Pair<String, String>> {
+
+        override fun auth(): Pair<String, String> {
+            return username to password
+        }
+    }
+
 
     fun basic(username: String, password: String): IRequestAuth<Pair<String, String>> {
         return BasicRequestAuth(username, password)
@@ -30,6 +31,5 @@ object RequestAuth {
 
     fun bearer(bearerToken: String): IRequestAuth<String> {
         return BearerRequestAuth(bearerToken)
-
     }
 }

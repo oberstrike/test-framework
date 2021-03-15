@@ -1,4 +1,4 @@
-package com.maju.rest.request.pach
+package com.maju.rest.request.put
 
 import com.maju.rest.client.RestClient
 import com.maju.rest.request.get.IGetRequest
@@ -8,24 +8,23 @@ import com.maju.rest.request.post.PostRequestHandler
 import com.maju.rest.response.RestResponse
 import io.restassured.specification.RequestSpecification
 
-interface IPatchRequest : IPostRequest
+interface IPutRequest : IPostRequest
 
-class PatchRequest : IPatchRequest, PostRequest()
+class PutRequest : IPutRequest, PostRequest()
 
-class PatchRequestHandler : RestClient.OnRequestCreateHandler<IPatchRequest> {
+class PutRequestHandler : RestClient.OnRequestCreateHandler<IPutRequest> {
 
     private val postRequestHandler = PostRequestHandler()
 
     override fun onRequestCreate(
         requestSpecification: RequestSpecification,
-        request: IPatchRequest
-    ):
-            RestResponse {
+        request: IPutRequest
+    ): RestResponse {
         return requestSpecification
             .apply { postRequestHandler.onRequestCreate(this, request) }
-            .let {
-                RestResponse(it.patch(request.path))
-            }
+            .let { RestResponse(it.put(request.path)) }
+
+
     }
 
 }

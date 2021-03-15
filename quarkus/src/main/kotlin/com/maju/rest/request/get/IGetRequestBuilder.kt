@@ -42,7 +42,8 @@ open class GetRequestBuilder(protected open val request: IGetRequest) : IGetRequ
     }
 }
 
-fun RestRequestFactory.get(path: String = "", block: IGetRequestBuilder.() -> IRequestBuilder): IGetRequest {
+fun RestRequestFactory.get(path: String = "",
+                           block: IGetRequestBuilder.() -> IRequestBuilder): IGetRequest {
     val getRequestBuilder = GetRequestBuilder.create(path)
     block.invoke(getRequestBuilder)
     return getRequestBuilder.build()

@@ -6,7 +6,7 @@ import com.maju.AbstractContainerCreator
 
 
 class PostgresOnContainerCreateHandler(
-    private val defaultConfig: IPostgresConfig
+    private val config: IPostgresConfig
 ) : AbstractContainerCreator.IContainerCreateHandler<KPostgreSQLContainer> {
 
     companion object {
@@ -16,37 +16,22 @@ class PostgresOnContainerCreateHandler(
         private const val DB_NAME = "queue"
         private const val DB_KIND = "postgresql"
 
-        fun default(
-            dbName: String = DB_NAME,
-            username: String = USERNAME,
-            password: String = PASSWORD,
-            port: Int = PORT,
-            initScriptPath: String? = null,
-            pConfig: MutableMap<String, String> = mutableMapOf()
-        ) = PostgresOnContainerCreateHandler(
-            DefaultPostgresConfig(
-                username = username,
-                dbName = dbName,
-                password = password,
-                port = port,
-                initScriptPath = initScriptPath,
-                pConfig = pConfig
-            )
-        )
+        fun create(
+            config: IPostgresConfig = PostgresConfigImpl(null, mutableMapOf())
+        ) = PostgresOnContainerCreateHandler(config)
     }
 
     override fun onContainerCreate(container: KPostgreSQLContainer): KPostgreSQLContainer {
         return container.apply {
-            withDatabaseName(defaultConfig.dbName)
-            withUsername(defaultConfig.username)
-            withPassword(defaultConfig.password)
-            withExposedPorts(defaultConfig.port)
-            if (defaultConfig.initScriptPath != null)
-                withInitScript(defaultConfig.initScriptPath)
+            withDatabaseName(config.dbName)
+            withUsername(config.username)
+            withPassword(config.password)
+            withExposedPorts(config.port)
+            if (config.initScriptPath != null) withInitScript(config.initScriptPath)
             withCreateContainerCmdModifier { cmd ->
                 cmd.withHostConfig(
                     HostConfig.newHostConfig().withPortBindings(
-                        PortBinding.parse("${defaultConfig.port}:${5432}")
+                        PortBinding.parse("${config.port}:${5432}")
                     )
                 )
             }
@@ -55,11 +40,11 @@ class PostgresOnContainerCreateHandler(
 
     override fun createConfig(): MutableMap<String, String> {
         return mutableMapOf(
-            "quarkus.datasource.jdbc.url" to "jdbc:postgresql://localhost:${defaultConfig.port}/${defaultConfig.dbName}",
-            "quarkus.datasource.password" to defaultConfig.password,
-            "quarkus.datasource.username" to defaultConfig.username,
+            "quarkus.datasource.jdbc.url" to "jdbc:postgresql://localhost:${config.port}/${config.dbName}",
+            "quarkus.datasource.password" to config.password,
+            "quarkus.datasource.username" to config.username,
             "quarkus.datasource.db-kind" to DB_KIND
-        ).apply { putAll(defaultConfig.withConfig()) }
+        ).apply { putAll(config.properties()) }
     }
 
     interface IPostgresConfig {
@@ -68,19 +53,20 @@ class PostgresOnContainerCreateHandler(
         var port: Int
         var dbName: String
         var initScriptPath: String?
-        fun withConfig(): MutableMap<String, String>
+        fun properties(): MutableMap<String, String>
     }
 
-    data class DefaultPostgresConfig(
-        override var username: String,
-        override var password: String,
-        override var port: Int,
-        override var dbName: String,
+    data class PostgresConfigImpl(
         override var initScriptPath: String?,
-        var pConfig: MutableMap<String, String>
+        var properties: MutableMap<String, String>,
+        override var username: String = USERNAME,
+        override var password: String = PASSWORD,
+        override var port: Int = PORT,
+        override var dbName: String = DB_NAME
     ) : IPostgresConfig {
-        override fun withConfig(): MutableMap<String, String> {
-            return pConfig
+
+        override fun properties(): MutableMap<String, String> {
+            return properties
         }
     }
 

@@ -2,7 +2,6 @@ package com.maju.postgres
 
 import com.nhaarman.mockitokotlin2.*
 import org.junit.jupiter.api.Test
-import org.testcontainers.containers.PostgreSQLContainer
 
 class PostgresOnContainerCreateHandlerTest {
 
@@ -13,14 +12,14 @@ class PostgresOnContainerCreateHandlerTest {
         val customConfig = mutableMapOf(pair)
 
         val mock = mock<PostgresOnContainerCreateHandler.IPostgresConfig> {
-            on { withConfig() } doReturn customConfig
+            on { properties() } doReturn customConfig
         }
 
 
         val postgresOnContainerCreateHandler = PostgresOnContainerCreateHandler(mock)
         val config = postgresOnContainerCreateHandler.createConfig()
 
-        verify(mock, times(1)).withConfig()
+        verify(mock, times(1)).properties()
 
         val url = config[pair.first]
         assert(url == pair.second)
@@ -33,8 +32,7 @@ class PostgresOnContainerCreateHandlerTest {
         val datasource = "quarkus.datasource.jdbc.url" to "jdbc:postgresql://localhost:5434/queue"
         val defaultConfigs = mapOf(username, password, datasource)
 
-
-        val postgresOnContainerCreateHandler = PostgresOnContainerCreateHandler.default()
+        val postgresOnContainerCreateHandler = PostgresOnContainerCreateHandler.create()
 
         val config = postgresOnContainerCreateHandler.createConfig()
         for (defaultConfig in defaultConfigs) {
@@ -46,7 +44,7 @@ class PostgresOnContainerCreateHandlerTest {
 
     @Test
     fun test() {
-        val postgresOnContainerCreateHandler = PostgresOnContainerCreateHandler.default()
+        val postgresOnContainerCreateHandler = PostgresOnContainerCreateHandler.create()
 
         val postgresContainer = KPostgreSQLContainer()
 

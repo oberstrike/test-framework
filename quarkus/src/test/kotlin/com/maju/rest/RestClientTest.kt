@@ -1,18 +1,15 @@
 package com.maju.rest
 
 import com.maju.rest.request.RestRequestFactory
-import com.maju.rest.request.auth.BearerRequestAuth
 import com.maju.rest.request.auth.RequestAuth
 import com.maju.rest.request.get.get
 import com.maju.rest.request.post.post
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import com.maju.rest.request.put.put
+import org.junit.jupiter.api.*
 import java.util.*
 
 val random = Random()
-internal fun randomFrom(from: Int = 1024, to: Int = 65535): Int {
+internal fun randomFrom(from: Int = 1024, to: Int = 5555): Int {
     return random.nextInt(to - from) + from
 }
 
@@ -38,7 +35,7 @@ class RestClientTest : AbstractRestClientTest() {
             path(getPath)
             params(mapOf(restParam))
         }
-        val response = client.get(request)
+        val response = client.send(request)
         assertThatRequestWasSuccessfull(response)
     }
 
@@ -46,11 +43,12 @@ class RestClientTest : AbstractRestClientTest() {
     fun basicAuthGetTest_negative() {
         val client = getRestClient()
 
+
         val request = RestRequestFactory.get {
             path(getPathWithBasicAuthorization)
         }
 
-        val response = client.get(request)
+        val response = client.send(request)
         assert(response.statusCode != 200)
 
     }
@@ -66,7 +64,7 @@ class RestClientTest : AbstractRestClientTest() {
             auth(basicAuth)
         }
 
-        val response = client.get(request)
+        val response = client.send(request)
         assertThatRequestWasSuccessfull(response)
 
     }
@@ -81,7 +79,7 @@ class RestClientTest : AbstractRestClientTest() {
             param(restParam)
         }
 
-        val response = client.post(request)
+        val response = client.send(request)
         assertThatRequestWasSuccessfull(response)
     }
 
@@ -96,7 +94,7 @@ class RestClientTest : AbstractRestClientTest() {
             param(restParam)
         }
 
-        val response = client.post(request)
+        val response = client.send(request)
         val body = response.body
 
         assertThatRequestWasSuccessfull(response)
@@ -111,7 +109,7 @@ class RestClientTest : AbstractRestClientTest() {
             path("/random/path")
         }
 
-        val response = client.get(request)
+        val response = client.send(request)
         assert(response.statusCode != 200)
     }
 
@@ -122,7 +120,7 @@ class RestClientTest : AbstractRestClientTest() {
             path(postPathWithoutBody)
         }
 
-        val response = client.get(request)
+        val response = client.send(request)
         assert(response.statusCode != 200)
     }
 
@@ -131,9 +129,9 @@ class RestClientTest : AbstractRestClientTest() {
         val client = getRestClient()
         val request = RestRequestFactory.get {
             path(getPathWithBearerAuthorization)
-            auth(BearerRequestAuth("token"))
+            auth(RequestAuth.bearer("token"))
         }
-        assertThatRequestWasSuccessfull(client.get(request))
+        assertThatRequestWasSuccessfull(client.send(request))
     }
     @Test
     fun getRequestWithBearerAuth_negativ() {
@@ -141,8 +139,21 @@ class RestClientTest : AbstractRestClientTest() {
         val request = RestRequestFactory.get {
             path(getPathWithBearerAuthorization)
         }
-        val response = client.get(request)
+        val response = client.send(request)
         assert(response.statusCode != 200)
+    }
+
+    @Test
+    fun putRequestTest(){
+        val client = getRestClient()
+
+        val request = RestRequestFactory.put {
+            path(putPath)
+        }
+
+        val response = client.send(request)
+        Assertions.assertEquals(200, response.statusCode)
+
     }
 
 }

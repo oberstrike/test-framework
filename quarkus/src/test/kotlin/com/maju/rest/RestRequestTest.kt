@@ -1,7 +1,6 @@
 package com.maju.rest
 
 import com.maju.rest.request.RestRequestFactory
-import com.maju.rest.request.auth.BasicRequestAuth
 import com.maju.rest.request.auth.RequestAuth
 import com.maju.rest.request.delete.delete
 import com.maju.rest.request.get.get

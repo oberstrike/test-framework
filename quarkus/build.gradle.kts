@@ -1,4 +1,5 @@
 import java.util.*
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
@@ -18,25 +19,30 @@ dependencies {
     implementation(platform("org.testcontainers:testcontainers-bom:$testcontainerVersion")) //import bom
     implementation("org.testcontainers:testcontainers:$testcontainerVersion")
     implementation("io.github.microutils:kotlin-logging:1.12.0")
-
- //   implementation("io.quarkus:quarkus-keycloak-admin-client:$quarkusVersion")
- //   implementation("io.quarkus:quarkus-kotlin:$quarkusVersion")
-    implementation("io.quarkus:quarkus-test-common:$quarkusVersion")
-    implementation("io.quarkus:quarkus-junit5:$quarkusVersion")
-    implementation("io.quarkus:quarkus-junit5-mockito:$quarkusVersion")
-
+    
     implementation("io.rest-assured:kotlin-extensions:$restassured")
     implementation("io.rest-assured:rest-assured:$restassured")
 
     testImplementation("org.mockito:mockito-core:2.21.0")
     testImplementation("org.mock-server:mockserver-netty:5.11.1")
     testImplementation("com.google.code.gson:gson:2.8.6")
+    implementation(kotlin("stdlib-jdk8"))
+    testImplementation(platform("org.junit:junit-bom:5.7.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
 
     api(project(":testcontainer"))
 
     testApi(project(":testcontainer"))
 
 }
+
+tasks.test {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
+}
+
 
 val myGroupId = "com.maju.quarkus"
 val myArtifactId = "quarkus"
@@ -137,4 +143,9 @@ bintray {
     }
 
 
+}
+val compileKotlin: KotlinCompile by tasks
+
+compileKotlin.kotlinOptions {
+    languageVersion = "1.4"
 }

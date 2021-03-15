@@ -1,10 +1,9 @@
 package com.maju.postgres
 
 import com.maju.AbstractContainerCreator
-import org.testcontainers.containers.PostgreSQLContainer
 
 
-private val defaultPostgresHandler = PostgresOnContainerCreateHandler.default()
+private val defaultPostgresHandler = PostgresOnContainerCreateHandler.create()
 
 private val defaultPostgresContainer = KPostgreSQLContainer()
 

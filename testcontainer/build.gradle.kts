@@ -18,18 +18,20 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
     implementation("io.github.microutils:kotlin-logging:1.12.0")
 
-    implementation("com.github.dasniko:testcontainers-keycloak:1.4.0")
-    implementation(platform("org.testcontainers:testcontainers-bom:1.14.3")) //import bom
-    implementation("org.testcontainers:testcontainers:1.14.3")
-    implementation("org.testcontainers:junit-jupiter:1.14.3")
-    implementation("org.testcontainers:postgresql:1.14.3")
+    implementation("org.testcontainers:mongodb:1.15.1")
+    implementation("com.github.dasniko:testcontainers-keycloak:1.6.0")
+    implementation(platform("org.testcontainers:testcontainers-bom:1.15.1")) //import bom
+    implementation("org.testcontainers:testcontainers:1.15.1")
+    implementation("org.testcontainers:junit-jupiter:1.15.1")
+    implementation("org.testcontainers:postgresql:1.15.1")
     implementation("org.slf4j:slf4j-simple:1.7.30")
+    implementation("org.mongodb:mongo-java-driver:3.12.7")
     testImplementation ("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 }
 
 val myGroupId = "com.maju.container"
 val myArtifactId = "testcontainer"
-val myVersion = "1.0.0"
+val myVersion = "1.0.1"
 
 val dokkaJavadocJar by tasks.creating(Jar::class) {
     dependsOn(tasks.dokkaJavadoc)

@@ -3,6 +3,7 @@ package com.maju.rest
 import com.google.gson.Gson
 import com.maju.rest.client.IRestClient
 import com.maju.rest.client.RestClient
+import com.maju.rest.client.RestClientConfig
 import com.maju.rest.response.RestResponse
 import org.mockserver.client.MockServerClient
 
@@ -10,10 +11,16 @@ import org.mockserver.integration.ClientAndServer
 import org.mockserver.model.HttpRequest
 import org.mockserver.model.HttpResponse
 
+data class MyClientConfig(
+    override val port: Int,
+    override val basePath: String = ""
+) : RestClientConfig
+
 abstract class AbstractRestClientTest {
     private val port = randomFrom()
 
     var mockServer: MockServerClient = MockServerClient("localhost", port)
+
     private val gson = Gson()
     protected val getPath = "/home"
     protected val getPathWithBasicAuthorization = "/secured/basic"
@@ -21,13 +28,15 @@ abstract class AbstractRestClientTest {
     protected val postPathWithBody = "/product"
     protected val postPathWithoutBody = "/check"
     protected val restParam: Pair<String, String> = "name" to "oberstrike"
-    private val restClient = RestClient.create(port)
+    protected val putPath = "/put"
+
+    private val restClient = RestClient.create(config = MyClientConfig(port))
 
     protected fun getRestClient(): IRestClient {
         return restClient
     }
 
-    protected fun getProduct(id: Int) = Product(id, "Aple")
+    protected fun getProduct(id: Int) = Product(id, "Apple")
 
     protected fun assertThatRequestWasSuccessfull(response: RestResponse) {
         val statusCode = response.statusCode
@@ -88,6 +97,15 @@ abstract class AbstractRestClientTest {
             HttpResponse.response()
                 .withStatusCode(200)
         )
+
+        mockServer.given(
+            HttpRequest.request()
+                .withMethod("PUT")
+                .withPath(putPath)
+        ).respond(
+            HttpResponse.response().withStatusCode(200)
+        )
+
 
     }
 
