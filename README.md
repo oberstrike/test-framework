@@ -4,7 +4,8 @@ Simple overview of use/purpose.
 
 ## Description
 
-Ein Framework zur Erstellung von Unit-und Integration-Tests. Es verwendet dazu Testcontainer und Http Befehle.
+A framework for creating unit and integration tests. It uses test containers and Http commands.
+It is still in the early stages of development, so it is not ready for production use.
 
 ## Getting Started
 
