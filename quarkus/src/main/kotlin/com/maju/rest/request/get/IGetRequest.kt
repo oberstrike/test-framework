@@ -23,12 +23,12 @@ open class GetRequest : IGetRequest {
 }
 
 
-class GetRequestHandler(private val stricted: Boolean = true) : RestClient.OnRequestCreateHandler<IGetRequest> {
+class GetRequestHandler(private val isStrict: Boolean = true) : RestClient.OnRequestCreateHandler<IGetRequest> {
 
     override fun onRequestCreate(
         requestSpecification: RequestSpecification,
         request: IGetRequest
-    ): RestResponse {
+    ): RequestSpecification {
 
         return requestSpecification.apply {
             if (request.requestAuth != null)
@@ -39,9 +39,7 @@ class GetRequestHandler(private val stricted: Boolean = true) : RestClient.OnReq
                 cookies(request.cookies)
 
             //contentType(ContentType.fromContentType(""))
-            if (stricted && request.params != null) params(request.params)
-        }.let {
-            RestResponse(it.get(request.path))
+            if (isStrict && request.params != null) params(request.params)
         }
 
     }

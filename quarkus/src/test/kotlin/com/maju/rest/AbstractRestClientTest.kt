@@ -29,6 +29,7 @@ abstract class AbstractRestClientTest {
     protected val postPathWithoutBody = "/check"
     protected val restParam: Pair<String, String> = "name" to "oberstrike"
     protected val putPath = "/put"
+    protected val deletePath = "/delete"
 
     private val restClient = RestClient.create(config = MyClientConfig(port))
 
@@ -102,6 +103,14 @@ abstract class AbstractRestClientTest {
             HttpRequest.request()
                 .withMethod("PUT")
                 .withPath(putPath)
+        ).respond(
+            HttpResponse.response().withStatusCode(200)
+        )
+
+        mockServer.given(
+            HttpRequest.request()
+                .withMethod("DELETE")
+                .withPath(deletePath)
         ).respond(
             HttpResponse.response().withStatusCode(200)
         )

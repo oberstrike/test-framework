@@ -19,13 +19,9 @@ class PatchRequestHandler : RestClient.OnRequestCreateHandler<IPatchRequest> {
     override fun onRequestCreate(
         requestSpecification: RequestSpecification,
         request: IPatchRequest
-    ):
-            RestResponse {
+    ): RequestSpecification {
         return requestSpecification
             .apply { postRequestHandler.onRequestCreate(this, request) }
-            .let {
-                RestResponse(it.patch(request.path))
-            }
     }
 
 }

@@ -2,6 +2,7 @@ package com.maju.rest
 
 import com.maju.rest.request.RestRequestFactory
 import com.maju.rest.request.auth.RequestAuth
+import com.maju.rest.request.delete.delete
 import com.maju.rest.request.get.get
 import com.maju.rest.request.post.post
 import com.maju.rest.request.put.put
@@ -154,6 +155,17 @@ class RestClientTest : AbstractRestClientTest() {
         val response = client.send(request)
         Assertions.assertEquals(200, response.statusCode)
 
+    }
+
+    @Test
+    fun deleteRequestTest(){
+        val client = getRestClient()
+
+        val request = RestRequestFactory.delete {
+            path(deletePath)
+        }
+        val response = client.send(request)
+        Assertions.assertEquals(200, response.statusCode)
     }
 
 }

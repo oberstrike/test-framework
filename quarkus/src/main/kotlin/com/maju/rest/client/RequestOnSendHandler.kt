@@ -5,7 +5,6 @@ import com.maju.rest.request.delete.DeleteRequest
 import com.maju.rest.request.delete.DeleteRequestHandler
 import com.maju.rest.request.get.GetRequest
 import com.maju.rest.request.get.GetRequestHandler
-import com.maju.rest.request.get.IGetRequest
 import com.maju.rest.request.pach.PatchRequest
 import com.maju.rest.request.pach.PatchRequestHandler
 import com.maju.rest.request.post.PostRequest
@@ -15,7 +14,7 @@ import com.maju.rest.request.put.PutRequestHandler
 import com.maju.rest.response.RestResponse
 import io.restassured.specification.RequestSpecification
 
-class RequestHandler<T : IBaseRequest> : RestClient.OnRequestCreateHandler<T> {
+class RequestOnSendHandler<T : IBaseRequest> : RestClient.OnSendHandler<T> {
 
     private val getRequestHandler = GetRequestHandler()
 
@@ -27,26 +26,22 @@ class RequestHandler<T : IBaseRequest> : RestClient.OnRequestCreateHandler<T> {
 
     private val putRequestHandler = PutRequestHandler()
 
-    override fun onRequestCreate(
-        requestSpecification: RequestSpecification,
-        request: T
-    ): RestResponse {
+    override fun onSend(requestSpecification: RequestSpecification, request: T): RestResponse {
         return when (request) {
-
             is DeleteRequest -> {
-                deleteRequestHandler.onRequestCreate(requestSpecification, request)
+                RestResponse(deleteRequestHandler.onRequestCreate(requestSpecification, request).delete(request.path))
             }
             is PutRequest -> {
-                putRequestHandler.onRequestCreate(requestSpecification, request)
+                RestResponse(putRequestHandler.onRequestCreate(requestSpecification, request).put(request.path))
             }
             is PatchRequest -> {
-                patchRequestHandler.onRequestCreate(requestSpecification, request)
+                RestResponse(patchRequestHandler.onRequestCreate(requestSpecification, request).put(request.path))
             }
             is PostRequest -> {
-                postRequestHandler.onRequestCreate(requestSpecification, request)
+                RestResponse(postRequestHandler.onRequestCreate(requestSpecification, request).put(request.path))
             }
             is GetRequest -> {
-                getRequestHandler.onRequestCreate(requestSpecification, request)
+                RestResponse(getRequestHandler.onRequestCreate(requestSpecification, request).put(request.path))
             }
 
             else -> throw Exception("There was no request-handler found: ${request.javaClass}")

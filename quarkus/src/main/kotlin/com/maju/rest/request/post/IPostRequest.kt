@@ -40,12 +40,10 @@ class PostRequestHandler : RestClient.OnRequestCreateHandler<IPostRequest> {
     var getRequestHandler = GetRequestHandler(false)
 
     override fun onRequestCreate(requestSpecification: RequestSpecification, request: IPostRequest)
-            : RestResponse {
+            : RequestSpecification {
         getRequestHandler.onRequestCreate(requestSpecification, request)
         return requestSpecification.apply {
             applyPost(request)
-        }.let {
-            RestResponse(it.post(request.path))
         }
 
     }

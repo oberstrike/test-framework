@@ -1,20 +1,9 @@
 package com.maju.rest.client
 
 import com.maju.rest.request.base.IBaseRequest
-import com.maju.rest.request.delete.DeleteRequestHandler
-import com.maju.rest.request.delete.IDeleteRequest
-import com.maju.rest.request.get.GetRequestHandler
-import com.maju.rest.request.get.IGetRequest
-import com.maju.rest.request.pach.IPatchRequest
-import com.maju.rest.request.pach.PatchRequestHandler
-import com.maju.rest.request.post.IPostRequest
-import com.maju.rest.request.post.PostRequestHandler
-import com.maju.rest.request.put.IPutRequest
-import com.maju.rest.request.put.PutRequestHandler
 import com.maju.rest.response.RestResponse
 import io.restassured.module.kotlin.extensions.Given
 import io.restassured.specification.RequestSpecification
-import org.testcontainers.shaded.okhttp3.Response
 
 interface IRestClient {
     fun <T : IBaseRequest> send(request: T): RestResponse
@@ -33,7 +22,7 @@ class RestClient private constructor(
     private val basePath by lazy { config.basePath }
     private val port by lazy { config.port }
 
-    private val requestHandler = RequestHandler<IBaseRequest>()
+    private val requestOnSendHandler = RequestOnSendHandler<IBaseRequest>()
 
     companion object {
         fun create(
@@ -43,7 +32,7 @@ class RestClient private constructor(
 
     override fun <T : IBaseRequest> send(request: T): RestResponse {
         val requestSpecification = createRequest()
-        return requestHandler.onRequestCreate(requestSpecification, request)
+        return requestOnSendHandler.onSend(requestSpecification, request)
     }
 
     private fun createRequest(): RequestSpecification {
@@ -58,7 +47,11 @@ class RestClient private constructor(
         fun onRequestCreate(
             requestSpecification: RequestSpecification,
             request: T
-        ): RestResponse
+        ): RequestSpecification
+    }
+
+    interface OnSendHandler<T: IBaseRequest>{
+        fun onSend(requestSpecification: RequestSpecification, request: T): RestResponse
     }
 }
 

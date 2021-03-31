@@ -19,12 +19,9 @@ class PutRequestHandler : RestClient.OnRequestCreateHandler<IPutRequest> {
     override fun onRequestCreate(
         requestSpecification: RequestSpecification,
         request: IPutRequest
-    ): RestResponse {
+    ): RequestSpecification {
         return requestSpecification
             .apply { postRequestHandler.onRequestCreate(this, request) }
-            .let { RestResponse(it.put(request.path)) }
-
-
     }
 
 }
