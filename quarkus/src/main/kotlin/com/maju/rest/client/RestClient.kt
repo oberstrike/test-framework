@@ -2,7 +2,6 @@ package com.maju.rest.client
 
 import com.maju.rest.request.base.IBaseRequest
 import com.maju.rest.response.RestResponse
-import io.restassured.module.kotlin.extensions.Given
 import io.restassured.specification.RequestSpecification
 
 interface IRestClient {
@@ -19,10 +18,11 @@ class RestClient private constructor(
     config: RestClientConfig
 ) : IRestClient {
 
-    private val basePath by lazy { config.basePath }
-    private val port by lazy { config.port }
 
-    private val requestOnSendHandler = RequestOnSendHandler<IBaseRequest>()
+    private val requestOnSendHandler by lazy { RequestOnSendHandler<IBaseRequest>(
+        config.basePath,
+        config.port
+    ) }
 
     companion object {
         fun create(
@@ -31,27 +31,19 @@ class RestClient private constructor(
     }
 
     override fun <T : IBaseRequest> send(request: T): RestResponse {
-        val requestSpecification = createRequest()
-        return requestOnSendHandler.onSend(requestSpecification, request)
+        return requestOnSendHandler.onSend( request)
     }
 
-    private fun createRequest(): RequestSpecification {
-        return Given {
-            basePath(basePath)
-            log().all()
-            port(port)
-        }
-    }
 
     interface OnRequestCreateHandler<T : IBaseRequest> {
         fun onRequestCreate(
-            requestSpecification: RequestSpecification,
-            request: T
+            request: T,
+            port: Int
         ): RequestSpecification
     }
 
-    interface OnSendHandler<T: IBaseRequest>{
-        fun onSend(requestSpecification: RequestSpecification, request: T): RestResponse
+    interface OnSendHandler<T : IBaseRequest> {
+        fun onSend(request: T): RestResponse
     }
 }
 

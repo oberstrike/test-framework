@@ -11,7 +11,7 @@ interface IDeleteRequest : IGetRequest {
     var contentType: String?
 }
 
-class DeleteRequest : IDeleteRequest, GetRequest() {
+class DeleteRequest(path: String) : IDeleteRequest, GetRequest(path) {
 
     override var contentType: String? = null
 }
@@ -20,12 +20,8 @@ class DeleteRequestHandler : RestClient.OnRequestCreateHandler<IDeleteRequest> {
 
     private val getRequestHandler = GetRequestHandler(false)
 
-    override fun onRequestCreate(
-        requestSpecification: RequestSpecification,
-        request: IDeleteRequest
-    ): RequestSpecification {
-        getRequestHandler.onRequestCreate(requestSpecification, request)
-        return requestSpecification.apply {
+    override fun onRequestCreate(request: IDeleteRequest, port: Int): RequestSpecification {
+        return getRequestHandler.onRequestCreate(request, port).apply {
             applyDelete(request)
         }
 

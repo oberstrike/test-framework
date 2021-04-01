@@ -1,12 +1,8 @@
 package com.maju.rest.request.delete
 
-import com.maju.rest.request.RestRequestFactory
-import com.maju.rest.request.base.IBaseRequest
 import com.maju.rest.request.base.IBaseRequestBuilder
 import com.maju.rest.request.base.IRequestBuilder
 import com.maju.rest.request.get.GetRequestBuilder
-import com.maju.rest.request.get.IGetRequest
-import com.maju.rest.request.get.IGetRequestBuilder
 
 interface IDeleteRequestBuilder : IBaseRequestBuilder {
     fun contentType(contentType: String): IDeleteRequestBuilder
@@ -14,24 +10,33 @@ interface IDeleteRequestBuilder : IBaseRequestBuilder {
     override fun build(): IDeleteRequest
 }
 
-class DeleteRequestBuilder(override val request: IDeleteRequest = DeleteRequest()) : IDeleteRequestBuilder,
-    GetRequestBuilder(request) {
+class DeleteRequestBuilder : IDeleteRequestBuilder,
+    GetRequestBuilder() {
+
+    private var contentType: String? = null
 
     companion object {
-        fun create(path: String): IDeleteRequestBuilder = DeleteRequestBuilder().apply { path(path) }
+        fun create(path: String): IDeleteRequestBuilder = DeleteRequestBuilder()
     }
 
     override fun contentType(contentType: String): IDeleteRequestBuilder = apply {
-        request.contentType = contentType
+        this.contentType = contentType
     }
 
     override fun build(): IDeleteRequest {
-        return request
+        return DeleteRequest(path).let {
+            it.params = params
+            it.cookies = cookies
+            it.headers = headers
+            it.requestAuth = requestAuth
+            it.contentType = contentType
+            it
+        }
     }
 
 }
 
-fun RestRequestFactory.delete(path: String = "", block: IDeleteRequestBuilder.() -> IRequestBuilder): IDeleteRequest {
+fun delete(path: String = "", block: IDeleteRequestBuilder.() -> IRequestBuilder): IDeleteRequest {
     val getRequestBuilder = DeleteRequestBuilder.create(path)
     block.invoke(getRequestBuilder)
     return getRequestBuilder.build()

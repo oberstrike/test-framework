@@ -1,6 +1,5 @@
 package com.maju.rest
 
-import com.maju.rest.request.RestRequestFactory
 import com.maju.rest.request.auth.RequestAuth
 import com.maju.rest.request.delete.delete
 import com.maju.rest.request.get.get
@@ -10,7 +9,7 @@ import org.junit.jupiter.api.*
 import java.util.*
 
 val random = Random()
-internal fun randomFrom(from: Int = 1024, to: Int = 5555): Int {
+internal fun randomPort(from: Int = 1024, to: Int = 5555): Int {
     return random.nextInt(to - from) + from
 }
 
@@ -32,7 +31,7 @@ class RestClientTest : AbstractRestClientTest() {
     fun standardGetTest() {
         val client = getRestClient()
 
-        val request = RestRequestFactory.get {
+        val request = get {
             path(getPath)
             params(mapOf(restParam))
         }
@@ -45,7 +44,7 @@ class RestClientTest : AbstractRestClientTest() {
         val client = getRestClient()
 
 
-        val request = RestRequestFactory.get {
+        val request = get {
             path(getPathWithBasicAuthorization)
         }
 
@@ -60,7 +59,7 @@ class RestClientTest : AbstractRestClientTest() {
 
         val basicAuth = RequestAuth.basic("test", "test")
 
-        val request = RestRequestFactory.get {
+        val request = get {
             path(getPathWithBasicAuthorization)
             auth(basicAuth)
         }
@@ -75,7 +74,7 @@ class RestClientTest : AbstractRestClientTest() {
     fun standardPostWithoutBodyTest() {
         val client = getRestClient()
 
-        val request = RestRequestFactory.post {
+        val request = post {
             path(postPathWithoutBody)
             param(restParam)
         }
@@ -89,7 +88,7 @@ class RestClientTest : AbstractRestClientTest() {
     fun standardPostWithBodyTest() {
         val client = getRestClient()
 
-        val request = RestRequestFactory.post {
+        val request = post {
             path(postPathWithBody)
             body(toJson(getProduct(0)))
             param(restParam)
@@ -106,7 +105,7 @@ class RestClientTest : AbstractRestClientTest() {
     fun standardGetTest_negativ() {
         val client = getRestClient()
 
-        val request = RestRequestFactory.get {
+        val request = get {
             path("/random/path")
         }
 
@@ -117,7 +116,7 @@ class RestClientTest : AbstractRestClientTest() {
     @Test
     fun getRequestOnPostPath_negativ() {
         val client = getRestClient()
-        val request = RestRequestFactory.get {
+        val request = get {
             path(postPathWithoutBody)
         }
 
@@ -128,7 +127,7 @@ class RestClientTest : AbstractRestClientTest() {
     @Test
     fun getRequestWithBearerAuth() {
         val client = getRestClient()
-        val request = RestRequestFactory.get {
+        val request = get {
             path(getPathWithBearerAuthorization)
             auth(RequestAuth.bearer("token"))
         }
@@ -137,7 +136,7 @@ class RestClientTest : AbstractRestClientTest() {
     @Test
     fun getRequestWithBearerAuth_negativ() {
         val client = getRestClient()
-        val request = RestRequestFactory.get {
+        val request = get {
             path(getPathWithBearerAuthorization)
         }
         val response = client.send(request)
@@ -148,7 +147,7 @@ class RestClientTest : AbstractRestClientTest() {
     fun putRequestTest(){
         val client = getRestClient()
 
-        val request = RestRequestFactory.put {
+        val request = put {
             path(putPath)
         }
 
@@ -161,7 +160,7 @@ class RestClientTest : AbstractRestClientTest() {
     fun deleteRequestTest(){
         val client = getRestClient()
 
-        val request = RestRequestFactory.delete {
+        val request = delete {
             path(deletePath)
         }
         val response = client.send(request)

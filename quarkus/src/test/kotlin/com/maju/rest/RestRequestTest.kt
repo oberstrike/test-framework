@@ -1,10 +1,9 @@
 package com.maju.rest
 
-import com.maju.rest.request.RestRequestFactory
 import com.maju.rest.request.auth.RequestAuth
 import com.maju.rest.request.delete.delete
 import com.maju.rest.request.get.get
-import com.maju.rest.request.pach.patch
+import com.maju.rest.request.patch.patch
 import com.maju.rest.request.post.post
 import io.restassured.http.ContentType
 import org.junit.jupiter.api.Test
@@ -21,7 +20,7 @@ class RestRequestTest {
     @Test
     fun getRequestTest() {
 
-        val request = RestRequestFactory.get {
+        val request = get {
             path(path)
             params(params)
         }
@@ -33,10 +32,10 @@ class RestRequestTest {
     @Test
     fun postRequestTest() {
 
-        val request = RestRequestFactory.post {
+        val request = post {
             params(params)
-            path(path)
             body(body)
+            path(path)
             contentType(contentType)
             auth(auth)
         }
@@ -50,11 +49,12 @@ class RestRequestTest {
 
     @Test
     fun deleteRequestTest() {
-        val request = RestRequestFactory.delete {
+        val request = delete {
             params(params)
-            path(path)
             contentType(contentType)
             auth(auth)
+            path(path)
+
         }
 
         assert(request.params == params)
@@ -66,12 +66,12 @@ class RestRequestTest {
 
     @Test
     fun patchRequestTest() {
-        val request = RestRequestFactory.patch {
+        val request = patch {
             params(params)
-            path(path)
             body(body)
             contentType(contentType)
             auth(auth)
+            path(path)
         }
 
 

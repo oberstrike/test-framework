@@ -17,7 +17,7 @@ data class MyClientConfig(
 ) : RestClientConfig
 
 abstract class AbstractRestClientTest {
-    private val port = randomFrom()
+    private val port = randomPort()
 
     var mockServer: MockServerClient = MockServerClient("localhost", port)
 

@@ -5,6 +5,8 @@ import com.maju.rest.request.auth.IRequestAuth
 import com.maju.rest.request.get.GetRequestHandler
 import com.maju.rest.request.get.IGetRequest
 import com.maju.rest.response.RestResponse
+import io.restassured.internal.RequestSpecificationImpl
+import io.restassured.module.kotlin.extensions.Given
 import io.restassured.specification.MultiPartSpecification
 import io.restassured.specification.RequestSpecification
 import java.io.File
@@ -13,11 +15,13 @@ interface IPostRequest : IGetRequest {
     var contentType: String?
     var body: Any?
     var multipartFile: MultiPartSpecification?
+
+    override val requestSpecification: RequestSpecification
+        get() = Given { log().all() }
 }
 
 
-open class PostRequest : IPostRequest {
-    override lateinit var path: String
+open class PostRequest(override val path: String) : IPostRequest {
 
     override var requestAuth: IRequestAuth<*>? = null
 
@@ -32,6 +36,7 @@ open class PostRequest : IPostRequest {
     override var cookies: Map<String, *>? = null
 
     override var multipartFile: MultiPartSpecification? = null
+
 }
 
 
@@ -39,13 +44,11 @@ class PostRequestHandler : RestClient.OnRequestCreateHandler<IPostRequest> {
 
     var getRequestHandler = GetRequestHandler(false)
 
-    override fun onRequestCreate(requestSpecification: RequestSpecification, request: IPostRequest)
+    override fun onRequestCreate(request: IPostRequest, port: Int)
             : RequestSpecification {
-        getRequestHandler.onRequestCreate(requestSpecification, request)
-        return requestSpecification.apply {
+        return getRequestHandler.onRequestCreate(request, port).apply {
             applyPost(request)
         }
-
     }
 
     private fun RequestSpecification.applyPost(request: IPostRequest) {

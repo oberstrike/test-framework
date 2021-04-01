@@ -5,13 +5,15 @@ import com.maju.rest.request.base.IBaseRequest
 import com.maju.rest.request.auth.IRequestAuth
 import com.maju.rest.request.auth.RequestAuth
 import com.maju.rest.response.RestResponse
+import io.restassured.module.kotlin.extensions.Given
+import io.restassured.module.kotlin.extensions.When
 import io.restassured.specification.RequestSpecification
 
 interface IGetRequest : IBaseRequest
 
-open class GetRequest : IGetRequest {
-
-    override lateinit var path: String
+open class GetRequest(
+    override val path: String
+) : IGetRequest {
 
     override var requestAuth: IRequestAuth<*>? = null
 
@@ -20,26 +22,27 @@ open class GetRequest : IGetRequest {
     override var headers: Map<String, String>? = null
 
     override var cookies: Map<String, *>? = null
+
+    override val requestSpecification: RequestSpecification
+        get() = Given { log().all() }
+
 }
 
 
 class GetRequestHandler(private val isStrict: Boolean = true) : RestClient.OnRequestCreateHandler<IGetRequest> {
 
-    override fun onRequestCreate(
-        requestSpecification: RequestSpecification,
-        request: IGetRequest
-    ): RequestSpecification {
+    override fun onRequestCreate(request: IGetRequest, port: Int): RequestSpecification {
 
-        return requestSpecification.apply {
+        return request.requestSpecification.apply {
             if (request.requestAuth != null)
                 applyAuth(request.requestAuth!!)
             if (request.headers != null)
                 headers(request.headers)
             if (request.cookies != null)
                 cookies(request.cookies)
-
-            //contentType(ContentType.fromContentType(""))
             if (isStrict && request.params != null) params(request.params)
+
+            port(port)
         }
 
     }

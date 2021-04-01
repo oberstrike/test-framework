@@ -1,10 +1,8 @@
 package com.maju.rest.request.put
 
-import com.maju.rest.request.RestRequestFactory
 import com.maju.rest.request.base.IRequestBuilder
-import com.maju.rest.request.pach.IPatchRequest
-import com.maju.rest.request.pach.PatchRequest
 import com.maju.rest.request.post.IPostRequestBuilder
+import com.maju.rest.request.post.PostRequest
 import com.maju.rest.request.post.PostRequestBuilder
 
 interface IPutRequestBuilder : IPostRequestBuilder {
@@ -12,20 +10,29 @@ interface IPutRequestBuilder : IPostRequestBuilder {
 
 }
 
-class PutRequestBuilder(override val request: IPutRequest = PutRequest()) : IPutRequestBuilder,
-    PostRequestBuilder(request) {
+class PutRequestBuilder : IPutRequestBuilder,
+    PostRequestBuilder() {
     companion object {
-        fun create(path: String): IPutRequestBuilder = PutRequestBuilder().apply { path(path) }
+        fun create(): IPutRequestBuilder = PutRequestBuilder()
     }
 
     override fun build(): IPutRequest {
-        return request
+        return PutRequest(path).let {
+            it.body = body
+            it.contentType = contentType
+            it.params = params
+            it.cookies = cookies
+            it.headers = headers
+            it.requestAuth = requestAuth
+            it.multipartFile = multipartFile
+            it
+        }
     }
 }
 
-fun RestRequestFactory.put(path: String = "", block: IPutRequestBuilder.() -> IRequestBuilder)
+fun put(block: IPutRequestBuilder.() -> IRequestBuilder)
         : IPutRequest {
-    val putRequestBuilder = PutRequestBuilder.create(path)
+    val putRequestBuilder = PutRequestBuilder.create()
     block.invoke(putRequestBuilder)
     return putRequestBuilder.build()
 }

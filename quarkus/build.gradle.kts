@@ -35,7 +35,7 @@ tasks.test {
 
 val myGroupId = "com.maju.rest"
 val myArtifactId = "rest"
-val myVersion = "1.0.1"
+val myVersion = "1.0.2"
 
 val dokkaJavadocJar by tasks.creating(Jar::class) {
     dependsOn(tasks.dokkaJavadoc)

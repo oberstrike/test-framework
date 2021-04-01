@@ -10,18 +10,14 @@ import io.restassured.specification.RequestSpecification
 
 interface IPutRequest : IPostRequest
 
-class PutRequest : IPutRequest, PostRequest()
+class PutRequest(path: String) : IPutRequest, PostRequest(path)
 
 class PutRequestHandler : RestClient.OnRequestCreateHandler<IPutRequest> {
 
     private val postRequestHandler = PostRequestHandler()
 
-    override fun onRequestCreate(
-        requestSpecification: RequestSpecification,
-        request: IPutRequest
-    ): RequestSpecification {
-        return requestSpecification
-            .apply { postRequestHandler.onRequestCreate(this, request) }
+    override fun onRequestCreate(request: IPutRequest, port: Int): RequestSpecification {
+        return postRequestHandler.onRequestCreate(request, port)
     }
 
 }

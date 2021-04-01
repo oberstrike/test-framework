@@ -2,10 +2,8 @@ package com.maju.rest.request.post
 
 import com.maju.rest.request.base.IBaseRequestBuilder
 import com.maju.rest.request.base.IRequestBuilder
-import com.maju.rest.request.RestRequestFactory
 import com.maju.rest.request.get.GetRequestBuilder
 import com.maju.rest.request.get.IGetRequestBuilder
-import io.restassured.http.ContentType
 import io.restassured.specification.MultiPartSpecification
 
 interface IPostRequestBuilder : IGetRequestBuilder {
@@ -20,38 +18,49 @@ interface IPostRequestBuilder : IGetRequestBuilder {
 }
 
 
-open class PostRequestBuilder(override val request: IPostRequest = PostRequest()) : IPostRequestBuilder,
-    GetRequestBuilder(request) {
+open class PostRequestBuilder : IPostRequestBuilder,
+    GetRequestBuilder() {
 
+    var contentType: String? = null
+
+    var body: String? = null
+
+    var multipartFile: MultiPartSpecification? = null
 
     companion object {
-        fun create(path: String): IPostRequestBuilder = PostRequestBuilder().apply { path(path) }
+        fun create(): IPostRequestBuilder = PostRequestBuilder()
     }
 
-    override fun headers(headers: Map<String, String>): IBaseRequestBuilder = apply {
-        request.headers = headers
-    }
 
     override fun contentType(contentType: String): IPostRequestBuilder = apply {
-        request.contentType = contentType
+        this.contentType = contentType
     }
 
     override fun body(body: String): IPostRequestBuilder = apply {
-        request.body = body
+        this.body = body
     }
 
     override fun file(multiPartSpecification: MultiPartSpecification) = apply {
-        request.multipartFile = multiPartSpecification
+        this.multipartFile = multiPartSpecification
     }
 
     override fun build(): IPostRequest {
-        return request
+        return PostRequest(path).let {
+            it.body = body
+            it.contentType = contentType
+            it.params = params
+            it.cookies = cookies
+            it.headers = headers
+            it.requestAuth = requestAuth
+            it.multipartFile = multipartFile
+            it
+        }
     }
 
 }
 
-fun RestRequestFactory.post(path: String = "", block: IPostRequestBuilder.() -> IRequestBuilder): IPostRequest {
-    val postRequestBuilder = PostRequestBuilder.create(path)
+fun post(block: IPostRequestBuilder.() -> IRequestBuilder): IPostRequest {
+    val postRequestBuilder = PostRequestBuilder.create()
     block.invoke(postRequestBuilder)
     return postRequestBuilder.build()
 }
