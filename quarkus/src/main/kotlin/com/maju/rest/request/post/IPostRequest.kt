@@ -5,6 +5,7 @@ import com.maju.rest.request.auth.IRequestAuth
 import com.maju.rest.request.get.GetRequestHandler
 import com.maju.rest.request.get.IGetRequest
 import com.maju.rest.response.RestResponse
+import io.restassured.http.ContentType
 import io.restassured.internal.RequestSpecificationImpl
 import io.restassured.module.kotlin.extensions.Given
 import io.restassured.specification.MultiPartSpecification
@@ -54,8 +55,12 @@ class PostRequestHandler : RestClient.OnRequestCreateHandler<IPostRequest> {
     private fun RequestSpecification.applyPost(request: IPostRequest) {
         if (request.contentType != null)
             contentType(request.contentType)
-        if (request.body != null)
+        if (request.body != null) {
             body(request.body)
+            if (request.contentType == null) {
+                contentType(ContentType.JSON)
+            }
+        }
         if (request.params != null && request.body != null) {
             queryParams(request.params)
         } else if (request.params != null) {
